@@ -1,0 +1,22 @@
+@import "src/index";
+
+.formButton {
+  font-size: 14px;
+  width: 160px;
+  height: 40px;
+  background-color: $color-2;
+  outline: none;
+  border: none;
+  color: #ffffff;
+  border-radius: 10px;
+  align-self: center;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all .3s ease-in-out;
+  text-transform: uppercase;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.37);
+    color: #ffffff
+  }
+}

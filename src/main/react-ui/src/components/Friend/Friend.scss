@@ -1,0 +1,76 @@
+@import "../../index";
+
+
+.friend--container{
+  width: 100%;
+  background: $color-3;
+  height: fit-content;
+  box-shadow: 0 2px 5px 0 #000000;
+  color: $color-1;
+  border-radius: 10px;
+  @media screen and (max-width: $tablet) {
+    position: fixed;
+    width: 50%;
+    border-radius: 0;
+    left: 0;
+    transition: all .7s ease-in-out;
+    box-shadow: none;
+    border-right: 1px solid #d0d0d0;
+    height: 100%;
+    .friend--container__profWrapper{
+      overflow: auto;
+      max-height: 600px;
+      padding: 0 10px 80px 10px;
+    }
+    &__actionWrapper{
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #d0d0d0;
+      cursor: pointer;
+      background: #fff;
+      .friend--container__title{
+        color: $color-2;
+        font-size: 16px;
+        position: relative;
+        border-bottom: none;
+
+      }
+      .friend--container__headAction{
+        outline: none;
+        border: 1px solid $color-2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        transition: all .7s ease;
+        margin-right: 5px;
+        background: none;
+        @media screen and (min-width: $tablet) {
+          display: none;
+        }
+      }
+    }
+
+    .profileByline--itemContainer{
+
+    }
+    &__title{
+
+
+    }
+  }
+  &__title{
+    margin: 0;
+    font-size: 24px;
+    padding: 10px;
+    border-bottom: 1px solid #d0d0d0;
+    user-select: none;
+
+  }
+}
+
+

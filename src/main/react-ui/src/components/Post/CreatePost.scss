@@ -1,0 +1,8 @@
+.createPost--container{
+  position: absolute;
+  background: rgba(#000, 0.4);
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  z-index: 9999;
+}
