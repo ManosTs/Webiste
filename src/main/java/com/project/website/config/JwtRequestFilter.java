@@ -60,11 +60,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         String requestTokenHeader = "";
         if(result.get("token") != null){
-            String toBeDecoded = URLDecoder.decode(result.get("token"), StandardCharsets.UTF_8);
-            String [] arr = toBeDecoded.split(" ", 2);
-            byte[] decodedBytes = Base64.getDecoder().decode(arr[1]);
-            String decodedToken = new String(decodedBytes);
-            requestTokenHeader = arr[0] + " " + URLDecoder.decode(decodedToken, StandardCharsets.UTF_8);
+            requestTokenHeader = result.get("token");
         }
 
 
@@ -75,7 +71,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
             try {
-                email = jwtTokenUtil.getUsernameFromToken(jwtToken);
+                email = jwtTokenUtil.getEmailFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
                 System.out.println("Unable to get JWT Token");
             } catch (ExpiredJwtException e) {

@@ -26,7 +26,7 @@ public class JwtTokenUtil implements Serializable {
     private String secret;
 
     //retrieve username from jwt token
-    public String getUsernameFromToken(String token) {
+    public String getEmailFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
@@ -53,6 +53,7 @@ public class JwtTokenUtil implements Serializable {
     //generate token for user
     public String generateToken(User userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", userDetails.getRoles().toString());
         return doGenerateToken(claims, userDetails.getEmail());
     }
 
@@ -73,7 +74,7 @@ public class JwtTokenUtil implements Serializable {
 
     //validate token
     public Boolean validateToken(String token, User userDetails) {
-        final String username = getUsernameFromToken(token);
-        return (username.equals(userDetails.getEmail()) && !isTokenExpired(token));
+        final String email = getEmailFromToken(token);
+        return (email.equals(userDetails.getEmail()) && !isTokenExpired(token));
     }
 }
