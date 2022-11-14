@@ -1,5 +1,7 @@
 package com.project.website.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,7 +25,9 @@ public class User implements UserDetails {
 
     private String email;
 
+
     private String password;
+
 
     private String token;
 
@@ -67,7 +71,7 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -84,14 +88,17 @@ public class User implements UserDetails {
         return authorities;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
 
+    @JsonProperty
     public void setPassword(String password) {
         this.password = password;
     }
 
+    @JsonIgnore
     public String getToken() {
         return token;
     }

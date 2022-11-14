@@ -1,5 +1,6 @@
 package com.project.website.service;
 
+import com.project.website.config.JwtTokenUtil;
 import com.project.website.entity.Role;
 import com.project.website.entity.User;
 import com.project.website.repository.RoleRepository;
@@ -9,6 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +21,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,7 +34,12 @@ public class UserService implements UserDetailsService {
 
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    public void setJwtTokenUtil(JwtTokenUtil jwtTokenUtil) {
+        this.jwtTokenUtil = jwtTokenUtil;
+    }
     @Autowired
     public void setbCryptPasswordEncoder(BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -46,24 +56,31 @@ public class UserService implements UserDetailsService {
     }
 
     public User createUser(String email, String username, String password){
-        User newUser = new User();
+        User userFound = userRepository.findByEmail(email);
+        if(userFound != null){
+            return null; //user exists
+        }
 
-        String encodedPassword = bCryptPasswordEncoder.encode(password);
-        Role role = roleRepository.findRoleByName("ROLE_USER");
+        User newUser = new User(); //create new user
+
+        String encodedPassword = bCryptPasswordEncoder.encode(password); //encode code
+
+        Role role = roleRepository.findRoleByName("ROLE_USER"); //add role to the user
+
+        //save user
         newUser.setEmail(email);
         newUser.setUsername(username);
         newUser.setPassword(encodedPassword);
         newUser.addRole(role);
 
-        userRepository.save(newUser);
-
-        return newUser;
+        return userRepository.save(newUser);
     }
 
     public User authUser(String email, String password){
         User userExists = userRepository.findByEmail(email);
 
         if(userExists != null && bCryptPasswordEncoder.matches(password, userExists.getPassword())){
+
             return userExists;
         }
 
@@ -79,5 +96,18 @@ public class UserService implements UserDetailsService {
     public Page<User> findUsersPaginated(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
         return this.userRepository.findAll(pageable);
+    }
+
+    public Map<?, ?> userDetails(String id){
+        Map<String, String> details = new HashMap<>();
+
+        User user = userRepository.findUserById(id);
+
+        details.put("id", user.getId());
+        details.put("username", user.getUsername());
+        details.put("email", user.getEmail());
+        details.put("roles", user.getRoles().toString());
+
+        return details;
     }
 }

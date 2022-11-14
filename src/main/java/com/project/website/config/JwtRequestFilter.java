@@ -1,6 +1,7 @@
 package com.project.website.config;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -60,7 +61,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         String requestTokenHeader = "";
         if(result.get("token") != null){
-            requestTokenHeader = result.get("token");
+
+            requestTokenHeader = decodeBase64Token(result.get("token"));
+
         }
 
 
@@ -102,5 +105,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
         chain.doFilter(request, response);
     }
+    private String decodeBase64Token(String encodedString) {
 
+
+        return URLDecoder.decode(encodedString, StandardCharsets.UTF_8);
+    }
 }

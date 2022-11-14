@@ -25,7 +25,7 @@ public class JwtTokenUtil implements Serializable {
     @Value("${jwt.secret}")
     private String secret;
 
-    //retrieve username from jwt token
+    //retrieve email from jwt token
     public String getEmailFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
@@ -57,13 +57,8 @@ public class JwtTokenUtil implements Serializable {
         return doGenerateToken(claims, userDetails.getEmail());
     }
 
-    //while creating the token -
-    //1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
-    //2. Sign the JWT using the HS512 algorithm and secret key.
-    //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
-    //   compaction of the JWT to a URL-safe string
-    private String doGenerateToken(Map<String, Object> claims, String subject) {
 
+    private String doGenerateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder().
                 setClaims(claims).
                 setSubject(subject).
