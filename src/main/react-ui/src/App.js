@@ -1,36 +1,28 @@
+import logo from './logo.svg';
 import './App.scss';
-import {Header} from "./main-ui/Header";
-import {Footer} from "./main-ui/Footer";
-import { Routes ,Route } from 'react-router-dom';
-import Login from "./components/Login/Login";
-import Register from "./components/Register/Register";
-import Home from "./components/Home/Home";
-import {ProtectedRouter} from "./security/ProtectedRouter";
-import Profile from "./components/Profile/Profile";
+import FormUser from "./components/FormUser";
+import {BrowserRouter, Route, Router, Routes, useLocation} from "react-router-dom";
+import Home from "./components/Home";
+import {useSelector} from "react-redux";
+import PrivateRoute from "./PrivateRoute";
 
 function App() {
-  return (
-    <div className="App">
-      <Header />
-        <Routes>
-            <Route path='/login' element={<Login/>} />
-            <Route path='/register' element={<Register/>} />
+    const isAuthenticated = useSelector(state => state.isAuthenticated);
 
-            <Route path='/home' element={
-                <ProtectedRouter>
-                    <Home/>
-                </ProtectedRouter>
-            } />
+    return (
+        <div className="App">
+            <BrowserRouter>
+                <Routes>
 
-            <Route path={`/profile/:id`} element={
-                <ProtectedRouter>
-                    <Profile />
-                </ProtectedRouter>
-            } />
-        </Routes>
-    </div>
-
-  );
+                    <Route path="/register"
+                           element={<FormUser title="SIGN UP" hideUsernameField={false} login={false}/>}/>
+                    <Route path="/login" element={<FormUser title="LOGIN" hideUsernameField={true} login={true}/>}/>
+                    <Route path="/home"
+                           element={<PrivateRoute element={<Home/>} isAuthenticated={isAuthenticated}/>} />
+                </Routes>
+            </BrowserRouter>
+        </div>
+    );
 }
 
 export default App;
