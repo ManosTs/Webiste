@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,7 @@ import com.project.website.entity.User;
 import com.project.website.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -60,9 +62,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 
         String requestTokenHeader = "";
-        if(result.get("token") != null){
+        if(result.get("access_token") != null){
 
-            requestTokenHeader = decodeBase64Token(result.get("token"));
+            requestTokenHeader = decodeBase64Token(result.get("access_token"));
 
         }
 
@@ -79,6 +81,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 System.out.println("Unable to get JWT Token");
             } catch (ExpiredJwtException e) {
                 System.out.println("JWT Token has expired");
+                System.out.println(e.getClaims());
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                        null, null, null);
+                usernamePasswordAuthenticationToken
+                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                request.setAttribute("claims", e.getClaims());
             }
         } else {
             logger.warn("JWT Token does not begin with Bearer String");

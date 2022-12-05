@@ -20,7 +20,8 @@ public class JwtTokenUtil implements Serializable {
 
     private static final long serialVersionUID = -2550185165626007488L;
 
-    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+    @Value("${jwt.access.token.expiration}")
+    public long JWT_TOKEN_VALIDITY;
 
     @Value("${jwt.secret}")
     private String secret;
@@ -45,15 +46,14 @@ public class JwtTokenUtil implements Serializable {
     }
 
     //check if the token has expired
-    private Boolean isTokenExpired(String token) {
+    private boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
 
     //generate token for user
-    public String generateToken(User userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", userDetails.getRoles().toString());
+    public String generateToken(User userDetails, Map<String, Object> claims) {
+
         return doGenerateToken(claims, userDetails.getEmail());
     }
 
@@ -68,8 +68,11 @@ public class JwtTokenUtil implements Serializable {
     }
 
     //validate token
-    public Boolean validateToken(String token, User userDetails) {
-        final String email = getEmailFromToken(token);
-        return (email.equals(userDetails.getEmail()) && !isTokenExpired(token));
+    public boolean validateToken(String token, User userDetails) {
+        if(userDetails != null){
+            final String email = getEmailFromToken(token);
+            return (email.equals(userDetails.getEmail()) && !isTokenExpired(token));
+        }
+        return false;
     }
 }

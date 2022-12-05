@@ -1,15 +1,17 @@
 package com.project.website.entity;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpStatusCodeException;
 
 import java.time.LocalDateTime;
 
-public class ExceptionResponse {
+public class MessageResponse {
     private String message;
     private LocalDateTime date;
-    private HttpStatus status;
+    private int status;
 
-    public ExceptionResponse(String message, LocalDateTime date, HttpStatus status) {
+    public MessageResponse(String message, LocalDateTime date, int status) {
+        super();
         this.message = message;
         this.date = date;
         this.status = status;
@@ -23,7 +25,7 @@ public class ExceptionResponse {
         return date;
     }
 
-    public HttpStatus getStatus() {
+    public int getStatus() {
         return status;
     }
 }

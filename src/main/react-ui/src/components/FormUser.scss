@@ -9,6 +9,10 @@
   bottom: 0;
   margin: auto;
   padding: 50px;
+  @media screen and (max-width: 1024px) {
+    width: 100%;
+    padding: 10px;
+  }
   &__registerMsg{
     text-decoration: none;
     color: #fff;
@@ -55,18 +59,10 @@
     background: none;
     transition: all .3s ease-in-out;
     width: 100%;
-    caret-color: #fff;
+    caret-color: red;
     color: #fff;
-
-    &:focus{
-      &::placeholder{
-        font-size: 8px;
-        transform: translateY(-15px);
-        transition: all .3s ease-in-out;
-      }
-    }
     &::placeholder{
-      color: #fff !important;
+      color: rgba(255, 255, 255, 0.9);
       letter-spacing: .8px;
       transition: all .3s ease-in-out;
     }
@@ -90,9 +86,10 @@
     letter-spacing: .9px;
     align-self: center;
     &:hover{
-      background-color: rgba(#ac9c9c, 0.7);
+      background-color: red;
       color: #fff;
       transition: all .3s ease-in-out;
+      border: 1px solid red;
     }
   }
 }

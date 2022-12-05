@@ -1,17 +1,18 @@
 package com.project.website.controller;
 
 
-import com.project.website.config.CustomExceptionHandling;
 import com.project.website.config.JwtTokenUtil;
+import com.project.website.entity.MessageResponse;
+import com.project.website.entity.RefreshToken;
 import com.project.website.entity.User;
+import com.project.website.repository.RefreshTokenRepository;
 import com.project.website.repository.UserRepository;
+import com.project.website.service.RefreshTokenService;
 import com.project.website.service.UserService;
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -23,8 +24,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
+import java.sql.Ref;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Base64;
@@ -65,63 +68,78 @@ public class UserController {
         this.userService = userService;
     }
 
+    private RefreshTokenService refreshTokenService;
+
+    @Autowired
+    public void setRefreshTokenService(RefreshTokenService refreshTokenService) {
+        this.refreshTokenService = refreshTokenService;
+    }
+
+    private RefreshTokenRepository refreshTokenRepository;
+
+    @Autowired
+    public void setRefreshTokenRepository(RefreshTokenRepository refreshTokenRepository) {
+        this.refreshTokenRepository = refreshTokenRepository;
+    }
+
     @PostMapping(path= "/register", consumes = "application/json", produces = "application/json; charset=utf-8")
     @ResponseBody
     public ResponseEntity<?> registerUser(@RequestBody User user) {
-
+        Map<String, String> message = new HashMap<>();
 
         if(isStringBlank(user.getEmail()) ||
                 isStringBlank(user.getPassword()) ||
                 isStringBlank(user.getUsername())){
-            return new CustomExceptionHandling().handleException(
-                    "NULL PROPERTIES",
-                    LocalDateTime.now(),
-                    HttpStatus.BAD_REQUEST);
+            message.put("STATUS", "NULL PROPERTIES");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
 
 
 
         User newUser = userService.createUser(user.getEmail(), user.getUsername(), user.getPassword());
         if(newUser == null){
-            return new CustomExceptionHandling().handleException(
-                    "EMAIL ALREADY EXISTS",
-                    LocalDateTime.now(),
-                    HttpStatus.BAD_REQUEST);
+            message.put("STATUS", "EMAIL ALREADY EXISTS");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
-
+        message.put("STATUS", "REGISTERED SUCCESSFULLY");
         return ResponseEntity.ok()
-                .body(newUser);
+                .body(message);
     }
 
     @PostMapping(path= "/login", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> loginUser(@RequestBody User user, HttpServletResponse response) throws Exception {
-        Map<String, String> message = new HashMap<>();
+
         User userFound = userService.authUser(user.getEmail(), user.getPassword());
 
         if(userFound != null){
-
-            //validate token and check if it is expired
-            if(userFound.getToken() != null
-                    && jwtTokenUtil.validateToken(userFound.getToken(), userFound)){
-                addCookieToken(userFound.getToken(), response);
-                return ResponseEntity.status(HttpStatus.OK).build();
+            try {
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userFound.getEmail(), user.getPassword()));
+            }
+            catch (DisabledException e) {
+                throw new Exception("USER_DISABLED", e);
+            } catch (BadCredentialsException e) {
+                throw new Exception("INVALID_CREDENTIALS", e);
             }
 
-            //else if it is expired or null, create new token
-            final String token = jwtTokenUtil.generateToken(userFound);
+            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userFound.getId());
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("roles", userFound.getRoles().toString());
 
-            userFound.setToken(token);
+
+            final String token = jwtTokenUtil.generateToken(userFound, claims);
+
+            userFound.setAccessToken(token);
+
             userRepository.save(userFound);
 
-            addCookieToken(token, response);
+            response.addHeader("Set-Cookie","access_token=Bearer%20"+ token + "; Path=/; Secure; HttpOnly; SameSite=Lax; domain=localhost; Expires="+jwtTokenUtil.getExpirationDateFromToken(token)+";");
+            response.addHeader("Set-Cookie","refresh_token="+ refreshToken.getToken() + "; Path=/; Secure; HttpOnly; SameSite=Lax; domain=localhost; Expires="+refreshToken.getExpireDate()+";");
 
-            message.put("RES", "SUCCESS");
-            return ResponseEntity.status(HttpStatus.OK).body(message);
+            return ResponseEntity.status(HttpStatus.OK).body(userFound);
 
         }
 
-        return new CustomExceptionHandling().handleException("ACCESS DENIED",
-                LocalDateTime.now(),HttpStatus.FORBIDDEN);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @PutMapping(path= "/{id}/update", consumes = "application/json", produces = "application/json")
@@ -150,42 +168,77 @@ public class UserController {
 
         userRepository.delete(userDelete);
 
-        return ResponseEntity.status(HttpStatus.OK).body("USER DELETED");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping(path= "/getAll", produces = "application/json")
-    public ResponseEntity<Object> getUsers(@RequestParam(value="pageNo") int pageNo,
-                                           @RequestParam(value="pageSize") int pageSize){
+    public ResponseEntity<Object> getUsers(@RequestParam(name="pageNo") int pageNo,
+                                           @RequestParam(name="pageSize") int pageSize){
 
         Page<User> page = userService.findUsersPaginated(pageNo, pageSize);
 
         if(page.getContent().isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("NO USERS TO RETRIEVE");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
     @GetMapping(path= "/{id}", produces = "application/json")
     public ResponseEntity<Object> getUser(@PathVariable String id){
-        Map<?, ?> userDetails = userService.userDetails(id);
+        User user = userRepository.findUserById(id);
 
-        if(userDetails.get("email") == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("NO USER");
+        if(user == null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
-        return ResponseEntity.status(HttpStatus.OK).body(userDetails);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
+    @PostMapping(path = "/refresh-token")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshToken refreshToken,
+                                          HttpServletRequest request,
+                                          HttpServletResponse response){
+        RefreshToken refreshTokenFound = refreshTokenRepository.findRefreshTokenByToken(refreshToken.getToken());
+
+        if(refreshTokenFound == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        boolean isExpired = refreshTokenService.validateRefreshToken(refreshToken);
+        if(isExpired){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        DefaultClaims claims = (DefaultClaims) request.getAttribute("claims");
+
+        final String newToken = jwtTokenUtil.generateToken(refreshToken.getUser(), claims);
+
+        refreshToken.getUser().setAccessToken(newToken);
+        userRepository.save(refreshToken.getUser());
+
+        response.addHeader("Set-Cookie","access_token=Bearer%20"+ newToken + "; Path=/; Secure; HttpOnly; SameSite=Lax; domain=localhost; Expires="+jwtTokenUtil.getExpirationDateFromToken(newToken)+";");
+        response.addHeader("Set-Cookie","refresh_token="+ refreshToken.getToken() + "; Path=/; Secure; HttpOnly; SameSite=Lax; domain=localhost; Expires="+refreshToken.getExpireDate()+";");
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+
+    }
+
+    @GetMapping(path= "/access_token", produces = "application/json")
+    public ResponseEntity<Object> validateAccessToken(@RequestParam String id){
+        User user = userRepository.findUserById(id);
+
+        if(user == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        boolean isTokenValid = jwtTokenUtil.validateToken(user.getAccessToken(), user);
+
+        if(!isTokenValid)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     private boolean isStringBlank(String string){
         return string == null || string.trim().isEmpty();
-    }
-    private void addCookieToken(String token, HttpServletResponse response){
-        // create a cookie
-        ResponseCookie cookie = ResponseCookie.from("token", "Bearer%20"+token)
-                .httpOnly(true)
-                .secure(true)
-                .domain("localhost")
-                .path("/")
-                .sameSite("Lax")
-                .build();
-        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 }

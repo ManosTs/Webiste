@@ -4,17 +4,24 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  height: 100%;
+  height: auto;
   margin: 0;
-  background-image: url("./resources/images/register-page-img.jpg");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.background-image{
+  position: fixed;
+  background-image: url("./resources/images/register-page-img.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  height: 100%;
 }
 
 

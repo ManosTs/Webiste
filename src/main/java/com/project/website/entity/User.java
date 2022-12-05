@@ -1,6 +1,7 @@
 package com.project.website.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +13,7 @@ import java.util.*;
 
 @Entity
 @Table(name="users")
+@JsonIgnoreProperties({"accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -21,15 +23,18 @@ public class User implements UserDetails {
     )
     private String id;
 
+    @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(nullable = false, unique = true)
     private String email;
 
 
+    @Column(nullable = false)
     private String password;
 
-
-    private String token;
+    @Column(unique = true)
+    private String accessToken;
 
     public String getId() {
         return id;
@@ -41,22 +46,22 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
     public void setUsername(String username) {
@@ -80,6 +85,7 @@ public class User implements UserDetails {
     private Set<Role> roles = new HashSet<>();
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         for (Role role : roles) {
@@ -98,13 +104,13 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    @JsonIgnore
-    public String getToken() {
-        return token;
+
+    public String getAccessToken() {
+        return accessToken;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public void addRole(Role role){

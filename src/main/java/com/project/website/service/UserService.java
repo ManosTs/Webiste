@@ -107,6 +107,7 @@ public class UserService implements UserDetailsService {
         details.put("username", user.getUsername());
         details.put("email", user.getEmail());
         details.put("roles", user.getRoles().toString());
+        details.put("access_token", user.getAccessToken());
 
         return details;
     }
