@@ -8,7 +8,7 @@ function UserList({retrieveAsyncUsers, users, totalElements}) {
     const [currentPage, setCurrentPage] = useState(0);
 
     const currentItems = users?.content;
-    const pageCount = Math.ceil(totalElements / 5);
+    const pageCount = Math.ceil(totalElements / 6);
 
     const handlePageClick = (event) => {
 
@@ -17,6 +17,7 @@ function UserList({retrieveAsyncUsers, users, totalElements}) {
     };
     return (
         <div className="userList--container">
+            <h2>ALL USERS</h2>
             <ul className="userList--wrapper">
                 {users && currentItems.map(
                     (obj, index) =>(
@@ -34,7 +35,7 @@ function UserList({retrieveAsyncUsers, users, totalElements}) {
                 breakLabel="..."
                 nextLabel=">"
                 onPageChange={handlePageClick}
-                pageRangeDisplayed={5}
+                pageRangeDisplayed={6}
                 pageCount={pageCount}
                 previousLabel="<"
                 renderOnZeroPageCount={null}

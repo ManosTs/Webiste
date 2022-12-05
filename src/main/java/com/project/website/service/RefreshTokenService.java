@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Ref;
 import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
@@ -40,20 +41,28 @@ public class RefreshTokenService {
 
     public RefreshToken createRefreshToken(String userID){
         User user = userRepository.findUserById(userID);
-        RefreshToken refreshToken = new RefreshToken();
-        try {
+        RefreshToken refreshTokenExists = refreshTokenRepository.findRefreshTokenByUserId(userID);
+
+        if(refreshTokenExists == null) {
 
 
-            refreshToken.setToken(generateBased64());
-            refreshToken.setUser(user);
-            refreshToken.setExpireDate(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY * 1000));
-            return refreshTokenRepository.save(refreshToken);
-        }catch (DataIntegrityViolationException e) {
-            System.out.println("DUPLICATE REFRESH TOKEN ENTRY");
+            RefreshToken refreshToken = new RefreshToken();
+            try {
+
+
+                refreshToken.setToken(generateBased64());
+                refreshToken.setUser(user);
+                refreshToken.setExpireDate(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY * 1000));
+                return refreshTokenRepository.save(refreshToken);
+            } catch (DataIntegrityViolationException e) {
+                System.out.println("DUPLICATE REFRESH TOKEN ENTRY");
+            }
+
+
+            return refreshToken;
         }
 
-
-        return refreshToken;
+        return refreshTokenExists;
     }
 
     private String generateBased64(){

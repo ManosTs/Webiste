@@ -183,6 +183,22 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
+    @GetMapping(path= "/logout", produces = "application/json")
+    public ResponseEntity<Object> logout(@RequestParam(name="id") String id, HttpServletResponse response){
+        User user = userRepository.findUserById(id);
+        Map<String, String> message = new HashMap<>();
+
+        if(user == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        response.addHeader("Set-Cookie","access_token="+ null + "; Path=/; Secure; HttpOnly; SameSite=Lax; domain=localhost; Expires="+0+";");
+        response.addHeader("Set-Cookie","refresh_token="+ null + "; Path=/; Secure; HttpOnly; SameSite=Lax; domain=localhost; Expires="+0+";");
+
+        message.put("RESPONSE", "LOGOUT SUCCESSFULLY");
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
+
     @GetMapping(path= "/{id}", produces = "application/json")
     public ResponseEntity<Object> getUser(@PathVariable String id){
         User user = userRepository.findUserById(id);
@@ -193,30 +209,36 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
-    @PostMapping(path = "/refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestBody RefreshToken refreshToken,
-                                          HttpServletRequest request,
+    @GetMapping(path = "/refresh-token")
+    public ResponseEntity<?> refreshToken(HttpServletRequest request,
                                           HttpServletResponse response){
-        RefreshToken refreshTokenFound = refreshTokenRepository.findRefreshTokenByToken(refreshToken.getToken());
+        Map<String, String> result = new HashMap<>();
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                result.put(cookie.getName(), cookie.getValue());
+            }
+        }
+        RefreshToken refreshTokenFound = refreshTokenRepository.findRefreshTokenByToken(result.get("refresh_token"));
 
         if(refreshTokenFound == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        boolean isExpired = refreshTokenService.validateRefreshToken(refreshToken);
+        boolean isExpired = refreshTokenService.validateRefreshToken(refreshTokenFound);
         if(isExpired){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         DefaultClaims claims = (DefaultClaims) request.getAttribute("claims");
 
-        final String newToken = jwtTokenUtil.generateToken(refreshToken.getUser(), claims);
+        final String newToken = jwtTokenUtil.generateToken(refreshTokenFound.getUser(), claims);
 
-        refreshToken.getUser().setAccessToken(newToken);
-        userRepository.save(refreshToken.getUser());
+        refreshTokenFound.getUser().setAccessToken(newToken);
+        userRepository.save(refreshTokenFound.getUser());
 
         response.addHeader("Set-Cookie","access_token=Bearer%20"+ newToken + "; Path=/; Secure; HttpOnly; SameSite=Lax; domain=localhost; Expires="+jwtTokenUtil.getExpirationDateFromToken(newToken)+";");
-        response.addHeader("Set-Cookie","refresh_token="+ refreshToken.getToken() + "; Path=/; Secure; HttpOnly; SameSite=Lax; domain=localhost; Expires="+refreshToken.getExpireDate()+";");
+        response.addHeader("Set-Cookie","refresh_token="+ refreshTokenFound.getToken() + "; Path=/; Secure; HttpOnly; SameSite=Lax; domain=localhost; Expires="+refreshTokenFound.getExpireDate()+";");
 
         return ResponseEntity.status(HttpStatus.OK).build();
 

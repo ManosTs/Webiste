@@ -51,10 +51,10 @@ function FormUser({title, hideUsernameField, login}) {
         console.log(success);
         if(login && success){
             sessionStorage.setItem("login-details", JSON.stringify(results));
-            history("/");
+            window.location.href = "/";
         }
 
-        if(!success && !login){
+        if(success && !login){
             window.location.href = "/login";
         }
     }, [success]);
