@@ -23,7 +23,7 @@ public class RefreshToken {
     @Column(unique = true)
     private String token;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true)
     private User user;
 

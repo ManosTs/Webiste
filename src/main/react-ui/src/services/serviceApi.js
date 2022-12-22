@@ -64,10 +64,6 @@ export const logout = async ({id}) => {
             return response.json();
         }
 
-        if(response.status === 401){
-            refreshToken({id});
-        }
-
     })
 
 };
@@ -87,7 +83,7 @@ const refreshToken = async ({id}) => {
                 closeButton: () => {
                     setTimeout(function(){
                         window.location.reload()
-                    }, 1000);
+                    }, 2000);
                 },
                 autoClose: 1000
 
@@ -96,11 +92,14 @@ const refreshToken = async ({id}) => {
         }
 
         if(response.status === 403){
-            sessionStorage.clear();
-            localStorage.clear();
 
-            logout({id}).then(data => data).catch(error => console.log(error));
-            window.location.href = "/login";
+            logout({id}).then(data => {
+                sessionStorage.clear();
+                localStorage.clear();
+                window.location.href = "/login";
+                return data;
+            }).catch(error => console.log(error));
+
         }
 
     })

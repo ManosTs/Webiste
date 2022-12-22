@@ -77,7 +77,7 @@ function Home() {
 
                 <div className="expires">
                     <p>USER REFRESH TOKEN EXPIRES IN</p>
-                    <Countdown date={Date.now() + 8000000 * 1000} />
+                    <Countdown date={Date.now() + 90 * 1000} />
                 </div>
 
 
