@@ -69,6 +69,7 @@ public class RefreshTokenService {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
+    @Transactional
     public boolean validateRefreshToken(RefreshToken refreshToken){
         if(refreshToken.getExpireDate().compareTo(new Date()) < 0){
             refreshTokenRepository.deleteRefreshTokenByToken(refreshToken.getToken());

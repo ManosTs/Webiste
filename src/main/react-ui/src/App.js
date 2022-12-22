@@ -6,7 +6,8 @@ import Home from "./components/Home";
 import SecureRoute from "./SecureRoute";
 import {useSelector} from "react-redux";
 import {useState} from "react";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function App() {
 
     return (

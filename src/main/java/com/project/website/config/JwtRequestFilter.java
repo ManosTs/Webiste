@@ -19,6 +19,7 @@ import com.project.website.entity.User;
 import com.project.website.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -72,9 +73,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         String email = null;
         String jwtToken = null;
-        // JWT Token is in the form "Bearer token". Remove Bearer word and get
-        // only the Token
-        if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
+
+        if (requestTokenHeader != null
+                        && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
             try {
                 email = jwtTokenUtil.getEmailFromToken(jwtToken);
@@ -89,7 +90,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 request.setAttribute("claims", e.getClaims());
-                if(!request.getRequestURI().equals("/api/user/refresh-token")) response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+
+                if(!request.getRequestURI().equals("/api/user/public/refresh-token") && !request.getRequestURI().equals("/api/user/public/logout"))
+                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+
             }
         } else {
             logger.warn("JWT Token does not begin with Bearer String");
@@ -108,9 +112,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                         userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                // After setting the Authentication in the context, we specify
-                // that the current user is authenticated. So it passes the
-                // Spring Security Configurations successfully.
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }

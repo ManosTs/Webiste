@@ -1,11 +1,12 @@
 import './Home.scss';
-import {useEffect, useState} from "react";
-import {logout, retrieveUsers} from "../services/serviceApi";
+import {Fragment, useEffect, useState} from "react";
+import {retrieveUsers} from "../services/serviceApi";
 import UserList from "./UserList";
-import jsCookie from "js-cookie";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {logoutUser} from "../actions/userActions";
+import Countdown from 'react-countdown';
+import {ToastContainer} from "react-toastify";
 
 function Home() {
     const [users, setUsers] = useState(null);
@@ -25,7 +26,8 @@ function Home() {
 
     const retrieveAsyncUsers = async (page) => {
         let size = 6;
-        await retrieveUsers({page, size})
+        let id = loggedUser.id;
+        await retrieveUsers({page, size, id})
             .then(data => setUsers(data))
             .catch(error => console.log(error));
     };
@@ -35,6 +37,7 @@ function Home() {
             username:userDetails.username,
             id:userDetails.id,
             email:userDetails.email,
+            roleName: userDetails.roles[0].name
 
         });
     };
@@ -57,16 +60,33 @@ function Home() {
 
 
     return (
+        <Fragment>
         <div className="home--wrapper">
             <div className="user-info--card">
                 <h2>USER INFO</h2>
                 <p>{loggedUser.username}</p>
                 <p>{loggedUser.email}</p>
+                <p>{loggedUser.roleName === "ROLE_USER" ? "USER" : ""}</p>
                 <button onClick={logoutHandler}>LOGOUT</button>
+            </div>
+            <div className="expiration--card">
+                <div className="expires">
+                    <p>USER TOKEN EXPIRES IN</p>
+                    <Countdown date={Date.now() + 60 * 1000} />
+                </div>
+
+                <div className="expires">
+                    <p>USER REFRESH TOKEN EXPIRES IN</p>
+                    <Countdown date={Date.now() + 8000000 * 1000} />
+                </div>
+
+
             </div>
 
             <UserList retrieveAsyncUsers={retrieveAsyncUsers} users={users} totalElements={users?.totalElements}/>
+            <ToastContainer  />
         </div>
+        </Fragment>
     );
 }
 

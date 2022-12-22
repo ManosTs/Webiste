@@ -30,59 +30,41 @@ import java.net.URI;
 import java.sql.Ref;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3030")
 @RequestMapping(path = "/api/user")
 public class UserController {
 
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
+
+    private final AuthenticationManager authenticationManager;
+
+    private final UserRepository userRepository;
+
+    private final UserService userService;
+
+    private final RefreshTokenService refreshTokenService;
+
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
-    public void setJwtTokenUtil(JwtTokenUtil jwtTokenUtil) {
+    public UserController(JwtTokenUtil jwtTokenUtil,
+                          AuthenticationManager authenticationManager,
+                          UserRepository userRepository,
+                          UserService userService,
+                          RefreshTokenService refreshTokenService,
+                          RefreshTokenRepository refreshTokenRepository) {
         this.jwtTokenUtil = jwtTokenUtil;
-    }
-
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-    }
-
-    private UserRepository userRepository;
-
-    @Autowired
-    public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
-
-    private UserService userService;
-
-    @Autowired
-    public void setUserService(UserService userService) {
         this.userService = userService;
-    }
-
-    private RefreshTokenService refreshTokenService;
-
-    @Autowired
-    public void setRefreshTokenService(RefreshTokenService refreshTokenService) {
         this.refreshTokenService = refreshTokenService;
-    }
-
-    private RefreshTokenRepository refreshTokenRepository;
-
-    @Autowired
-    public void setRefreshTokenRepository(RefreshTokenRepository refreshTokenRepository) {
         this.refreshTokenRepository = refreshTokenRepository;
     }
 
-    @PostMapping(path= "/register", consumes = "application/json", produces = "application/json; charset=utf-8")
+    @PostMapping(path= "/public/register", consumes = "application/json", produces = "application/json; charset=utf-8")
     @ResponseBody
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         Map<String, String> message = new HashMap<>();
@@ -106,7 +88,7 @@ public class UserController {
                 .body(message);
     }
 
-    @PostMapping(path= "/login", consumes = "application/json", produces = "application/json")
+    @PostMapping(path= "/public/login", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> loginUser(@RequestBody User user, HttpServletResponse response) throws Exception {
 
         User userFound = userService.authUser(user.getEmail(), user.getPassword());
@@ -183,7 +165,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
-    @GetMapping(path= "/logout", produces = "application/json")
+    @GetMapping(path= "/public/logout", produces = "application/json")
     public ResponseEntity<Object> logout(@RequestParam(name="id") String id, HttpServletResponse response){
         User user = userRepository.findUserById(id);
         Map<String, String> message = new HashMap<>();
@@ -209,7 +191,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
-    @GetMapping(path = "/refresh-token")
+    @GetMapping(path = "/public/refresh-token")
     public ResponseEntity<?> refreshToken(HttpServletRequest request,
                                           HttpServletResponse response){
         Map<String, String> result = new HashMap<>();
