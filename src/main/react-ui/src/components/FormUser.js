@@ -3,7 +3,7 @@ import {Fragment, useEffect, useRef, useState} from "react";
 import './FormUser.scss';
 import LoaderSpinner from "./LoaderSpinner";
 import {NavLink} from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {authUser, registerUser} from "../actions/userActions";
 import {loginUser} from "../services/serviceApi.js";
@@ -13,6 +13,7 @@ function FormUser({title, hideUsernameField, login}) {
     const passwordRef = useRef('');
     const emailRef = useRef('');
     const [dataUser, setDataUser] = useState({});
+    const [errors, setErrors] = useState({});
     let history = useNavigate();
 
     const {loading, error, results, success} = useSelector(state => state.user);
@@ -31,77 +32,98 @@ function FormUser({title, hideUsernameField, login}) {
         e.preventDefault();
 
 
-        if(login){
+        if (login) {
 
             dispatch(authUser(dataUser));
 
 
         }
 
-        if(!login){
+        if (!login) {
             dispatch(registerUser(dataUser));
         }
-
-
 
 
     };
 
     useEffect(() => {
         console.log(success);
-        if(login && success){
+        if (login && success) {
             sessionStorage.setItem("login-details", JSON.stringify(results));
             window.location.href = "/";
         }
 
-        if(success && !login){
-            window.location.href = "/login";
+        if (success && !login) {
+            // window.location.href = "/login";
+
         }
-    }, [success]);
+
+        if (!success) {
+            console.log(error);
+            setErrors(error);
+        }
+    }, [success, error]);
     return (
         <Fragment>
             <div className="background-image"></div>
             <div className="addUser--wrapper">
-                <form className="addUser--wrapper__form"  onSubmit={handleSubmit}>
+                <form className="addUser--wrapper__form" onSubmit={handleSubmit}>
                     {hideUsernameField === false &&
-                        <input
-                            ref={usernameRef}
-                            type="text"
-                            id="username"
-                            name="username"
-                            className="addUser--wrapper__input"
-                            placeholder="Username"
-                            onChange={handleOnChangeEvent}
-                        />}
-                    <input
-                        ref={emailRef}
-                        type="email"
-                        id="email"
-                        name="email"
-                        className="addUser--wrapper__input"
-                        placeholder="Email"
-                        onChange={handleOnChangeEvent}
-                    />
+                        <div className="input-field">
+                            <input
+                                ref={usernameRef}
+                                type="text"
+                                id="username"
+                                name="username"
+                                className="addUser--wrapper__input"
+                                placeholder="Username"
+                                onChange={handleOnChangeEvent}
+                            />
+                            {errors?.username?.length > 0 &&
+                                <p className="errors">{errors.username}</p>}
+                        </div>}
+                        <div className="input-field">
+                            {login&&errors?.length > 0 &&
+                                <p className="errors login">{errors === "Rejected" ? "ACCESS DENIED": ""}</p>}
+                            <input
+                                ref={emailRef}
+                                type="text"
+                                id="email"
+                                name="email"
+                                className="addUser--wrapper__input"
+                                placeholder="Email"
 
-                    <input
-                        ref={passwordRef}
-                        type="password"
-                        id="password"
-                        name="password"
-                        className="addUser--wrapper__input"
-                        placeholder="Password"
-                        onChange={handleOnChangeEvent}
-                    />
-                    {login === true && <NavLink to="/register" className="addUser--wrapper__registerMsg">No account? Register Now</NavLink>}
-                    <button className="addUser--wrapper__button" type="submit">SUBMIT</button>
-                </form>
-                <p className="addUser--wrapper__title">{title}</p>
+                                onChange={handleOnChangeEvent}
+                            />
+                            {errors?.email?.length > 0 &&
+                                <p className="errors">{errors.email}</p>}
+                        </div>
 
-                {loading && <LoaderSpinner />}
-            </div>
-        </Fragment>
+                        <div className="input-field">
+                            <input
+                                ref={passwordRef}
+                                type="password"
+                                id="password"
+                                name="password"
+                                className="addUser--wrapper__input"
+                                placeholder="Password"
+                                onChange={handleOnChangeEvent}
+                            />
+                            {errors?.password?.length > 0 &&
+                                <p className="errors">{errors.password}</p>}
 
-    );
-}
+                        </div>
 
-export default FormUser;
+                    {login && <NavLink to="/register" className="addUser--wrapper__registerMsg">No account? Register Now</NavLink>}
+                        <button className="addUser--wrapper__button" type="submit">SUBMIT</button>
+                        </form>
+                        <p className="addUser--wrapper__title">{title}</p>
+
+                    {loading && <LoaderSpinner />}
+                        </div>
+                        </Fragment>
+
+                        );
+                    }
+
+                    export default FormUser;

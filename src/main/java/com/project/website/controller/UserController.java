@@ -26,6 +26,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.net.URI;
 import java.sql.Ref;
 import java.time.LocalDate;
@@ -66,15 +67,15 @@ public class UserController {
 
     @PostMapping(path= "/public/register", consumes = "application/json", produces = "application/json; charset=utf-8")
     @ResponseBody
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody User user) {
         Map<String, String> message = new HashMap<>();
 
-        if(isStringBlank(user.getEmail()) ||
-                isStringBlank(user.getPassword()) ||
-                isStringBlank(user.getUsername())){
-            message.put("STATUS", "NULL PROPERTIES");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
-        }
+//        if(isStringBlank(user.getEmail()) ||
+//                isStringBlank(user.getPassword()) ||
+//                isStringBlank(user.getUsername())){
+//            message.put("STATUS", "NULL PROPERTIES");
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+//        }
 
 
 
