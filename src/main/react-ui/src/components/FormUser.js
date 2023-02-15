@@ -16,7 +16,7 @@ function FormUser({title, hideUsernameField, login}) {
     const [errors, setErrors] = useState({});
     let history = useNavigate();
 
-    const {loading, error, results, success} = useSelector(state => state.user);
+    const {loading, error, results, success, statusCode} = useSelector(state => state.user);
 
     const dispatch = useDispatch();
 
@@ -50,18 +50,21 @@ function FormUser({title, hideUsernameField, login}) {
         console.log(success);
         if (login && success) {
             sessionStorage.setItem("login-details", JSON.stringify(results));
-            window.location.href = "/";
+            setErrors({});
+            window.location.href = '/';
         }
 
         if (success && !login) {
-            // window.location.href = "/login";
+            history('/login');
 
         }
 
         if (!success) {
-            console.log(error);
+            console.log(statusCode);
             setErrors(error);
         }
+
+        console.log(success);
     }, [success, error]);
     return (
         <Fragment>

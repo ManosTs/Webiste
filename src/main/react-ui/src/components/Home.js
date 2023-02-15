@@ -60,33 +60,20 @@ function Home() {
 
 
     return (
-        <Fragment>
         <div className="home--wrapper">
-            <div className="user-info--card">
-                <h2>USER INFO</h2>
-                <p>{loggedUser.username}</p>
-                <p>{loggedUser.email}</p>
-                <p>{loggedUser.roleName === "ROLE_USER" ? "USER" : ""}</p>
-                <button onClick={logoutHandler}>LOGOUT</button>
-            </div>
+
             <div className="expiration--card">
-                <div className="expires">
-                    <p>USER TOKEN EXPIRES IN</p>
-                    <Countdown date={Date.now() + 60 * 1000} />
-                </div>
-
-                <div className="expires">
-                    <p>USER REFRESH TOKEN EXPIRES IN</p>
-                    <Countdown date={Date.now() + 90 * 1000} />
-                </div>
 
 
+                {/*<div className="expires">*/}
+                {/*    <p>USER REFRESH TOKEN EXPIRES IN</p>*/}
+                {/*    <Countdown date={Date.now() + 9000000 * 1000} />*/}
+                {/*</div>*/}
             </div>
 
             <UserList retrieveAsyncUsers={retrieveAsyncUsers} users={users} totalElements={users?.totalElements}/>
             <ToastContainer  />
         </div>
-        </Fragment>
     );
 }
 

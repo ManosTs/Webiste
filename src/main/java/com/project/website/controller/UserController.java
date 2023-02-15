@@ -11,6 +11,7 @@ import com.project.website.service.RefreshTokenService;
 import com.project.website.service.UserService;
 import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Page;
 import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -66,7 +67,6 @@ public class UserController {
     }
 
     @PostMapping(path= "/public/register", consumes = "application/json", produces = "application/json; charset=utf-8")
-    @ResponseBody
     public ResponseEntity<?> registerUser(@Valid @RequestBody User user) {
         Map<String, String> message = new HashMap<>();
 
@@ -82,9 +82,12 @@ public class UserController {
         User newUser = userService.createUser(user.getEmail(), user.getUsername(), user.getPassword());
         if(newUser == null){
             message.put("STATUS", "EMAIL ALREADY EXISTS");
+            message.put("CODE", String.valueOf(HttpStatus.BAD_REQUEST.value()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         }
+
         message.put("STATUS", "REGISTERED SUCCESSFULLY");
+        message.put("CODE", String.valueOf(HttpStatus.OK.value()));
         return ResponseEntity.ok()
                 .body(message);
     }

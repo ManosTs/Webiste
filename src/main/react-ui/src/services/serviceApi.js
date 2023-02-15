@@ -42,10 +42,10 @@ export const retrieveUsers = async ({page, size, id}) => {
         if(response.ok) {
             return response.json();
         }
-        if(response.status === 401){
-            refreshToken({id});
-
-        }
+        // if(response.status === 401){
+        //     refreshToken({id});
+        //
+        // }
 
     })
 
@@ -68,7 +68,7 @@ export const logout = async ({id}) => {
 
 };
 
-const refreshToken = async ({id}) => {
+export const refreshToken = async ({id}) => {
     await fetch(`${url}/api/user/public/refresh-token`, {
         method: 'GET',
         credentials: "include",

@@ -30,7 +30,7 @@ public class User implements UserDetails {
 
     @Column(nullable = false, unique = true)
     @NotBlank(message = "Username is mandatory")
-    @Size(min = 10, max = 128, message = "Username must have min 10 and max 128 characters")
+    @Size(min = 10, max = 128, message = "Username must be between 10 and 128 characters in length")
     private String username;
 
     @Column(nullable = false, unique = true)
@@ -40,6 +40,7 @@ public class User implements UserDetails {
 
 
     @Column(nullable = false)
+    @NotBlank(message = "Password is mandatory")
     @Password
     private String password;
 

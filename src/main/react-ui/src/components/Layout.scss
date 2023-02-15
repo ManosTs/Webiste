@@ -1,0 +1,94 @@
+.header--container{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ac9c9c;
+  padding: 10px 0;
+  column-gap: 20px;
+  &__logo{
+    padding: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    border-right: 1px solid #FF3D00;
+  }
+  &__sessionTime{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+  &__links{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: auto;
+    flex: 0 0 20%;
+
+  }
+  &__search{
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+
+    &>input{
+      width: 100%;
+      outline: none;
+      border: none;
+      padding: 10px 0 10px 10px;
+    }
+
+  }
+  &__link{
+    font-size: 20px;
+    padding: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    border-right: 1px solid #FF3D00;
+    width: 100%;
+    &:hover{
+      background-color: rgba(#FF3D00, 0.6);
+      transition: all .3s ease-in-out;
+    }
+    &:last-child{
+      border-right: none;
+    }
+  }
+  button{
+    padding: 10px;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    font-style: italic;
+    color: black;
+    font-weight: 200;
+    width: 100px;
+    cursor: pointer;
+    margin-right: 10px;
+    &:hover{
+      transition: all .3s ease-in-out;
+      color: white;
+      background-color: darkgrey;
+    }
+  }
+}
+
+.header--user-info--card{
+  background-color: #ac9c9c;
+  color: white;
+  font-size: 16px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .user-info{
+    text-align: left;
+    p{
+      margin: 0;
+    }
+  }
+
+}
