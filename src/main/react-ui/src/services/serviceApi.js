@@ -42,10 +42,10 @@ export const retrieveUsers = async ({page, size, id}) => {
         if(response.ok) {
             return response.json();
         }
-        // if(response.status === 401){
-        //     refreshToken({id});
-        //
-        // }
+        if(response.status === 401){
+            refreshToken({id});
+
+        }
 
     })
 

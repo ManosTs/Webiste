@@ -55,7 +55,7 @@ function FormUser({title, hideUsernameField, login}) {
         }
 
         if (success && !login) {
-            history('/login');
+            window.location.href = '/login';
 
         }
 

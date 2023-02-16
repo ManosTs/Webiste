@@ -17,7 +17,6 @@ function UserList({retrieveAsyncUsers, users, totalElements}) {
     };
     return (
         <div className="userList--container">
-            <h2>ALL USERS</h2>
             <ul className="userList--wrapper">
                 {users && currentItems.map(
                     (obj, index) =>(
@@ -31,7 +30,7 @@ function UserList({retrieveAsyncUsers, users, totalElements}) {
                 )}
 
             </ul>
-            <ReactPaginate
+            {totalElements > 6 &&<ReactPaginate
                 breakLabel="..."
                 nextLabel=">"
                 onPageChange={handlePageClick}
@@ -39,7 +38,7 @@ function UserList({retrieveAsyncUsers, users, totalElements}) {
                 pageCount={pageCount}
                 previousLabel="<"
                 renderOnZeroPageCount={null}
-            />
+            />}
         </div>
 
 

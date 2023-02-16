@@ -6,6 +6,7 @@ import {refreshToken, retrieveUsers} from "../services/serviceApi";
 import "./Layout.scss";
 import Countdown from "react-countdown";
 import React from "react";
+import {ToastContainer} from "react-toastify";
 function Layout({children}){
     const [loggedUser, setLoggedUser] = useState({});
     const history = useNavigate();
@@ -59,7 +60,7 @@ function Layout({children}){
                     <div className="header--user-info--card">
                         <div className="user-info">
                             <p>{loggedUser.username}</p>
-                            <p>{loggedUser.email}</p>
+                            {/*<p>{loggedUser.email}</p>*/}
                         </div>
                         {/*<p>{loggedUser.roleName === "ROLE_USER" ? "USER" : ""}</p>*/}
 
@@ -67,7 +68,7 @@ function Layout({children}){
                     <div className="header--container__links">
                         <NavLink to={'/profile'} className="header--container__link">My Profile</NavLink>
                         <NavLink to={'/settings'} className="header--container__link">Settings</NavLink>
-                        <NavLink to={'/users'} className="header--container__link">Users</NavLink>
+                        <NavLink to={'/discover'} className="header--container__link">Discover</NavLink>
                     </div>
                     <div className="header--container__search">
                         <input type="text" placeholder="Search for People" id="searchHeader"/>
@@ -85,7 +86,7 @@ function Layout({children}){
 
                 </div>
             </footer>
-
+            <ToastContainer  />
         </Fragment>
     )
 }

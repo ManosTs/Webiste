@@ -16,21 +16,6 @@ function Home() {
 
     const dispatch = useDispatch();
 
-    const logoutHandler = () => {
-        let id = loggedUser.id;
-        dispatch(logoutUser({id}));
-
-
-
-    };
-
-    const retrieveAsyncUsers = async (page) => {
-        let size = 6;
-        let id = loggedUser.id;
-        await retrieveUsers({page, size, id})
-            .then(data => setUsers(data))
-            .catch(error => console.log(error));
-    };
     const getLoggedUserDetails = () => {
         const userDetails = JSON.parse(sessionStorage.getItem("login-details"));
         setLoggedUser({
@@ -43,9 +28,7 @@ function Home() {
     };
 
     useEffect(() => {
-        retrieveAsyncUsers(1);
         getLoggedUserDetails();
-
 
     }, []);
 
@@ -62,17 +45,16 @@ function Home() {
     return (
         <div className="home--wrapper">
 
-            <div className="expiration--card">
+            {/*<div className="expiration--card">*/}
 
 
-                {/*<div className="expires">*/}
-                {/*    <p>USER REFRESH TOKEN EXPIRES IN</p>*/}
-                {/*    <Countdown date={Date.now() + 9000000 * 1000} />*/}
-                {/*</div>*/}
-            </div>
+            {/*    <div className="expires">*/}
+            {/*        <p>USER REFRESH TOKEN EXPIRES IN</p>*/}
+            {/*        <Countdown date={Date.now() + 9000000 * 1000} />*/}
+            {/*    </div>*/}
+            {/*</div>*/}
 
-            <UserList retrieveAsyncUsers={retrieveAsyncUsers} users={users} totalElements={users?.totalElements}/>
-            <ToastContainer  />
+
         </div>
     );
 }

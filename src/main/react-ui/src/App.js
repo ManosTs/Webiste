@@ -9,6 +9,7 @@ import {useState} from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Layout from "./components/Layout";
+import Discover from "./components/Discover";
 function App() {
 
     return (
@@ -17,8 +18,8 @@ function App() {
                     <Route path="/register"
                            element={<FormUser title="SIGN UP" hideUsernameField={false} login={false}/>}/>
                     <Route path="/login" element={<FormUser title="LOGIN" hideUsernameField={true} login={true}/>}/>
-                    <Route exact path="/" element={<SecureRoute><Layout><Home/></Layout></SecureRoute>}/>
-
+                    <Route exact path="/" element={<SecureRoute><Layout><Home/></Layout></SecureRoute>} />
+                    <Route path="/discover" element={<SecureRoute><Layout><Discover/></Layout></SecureRoute>} />
                 </Routes>
             </BrowserRouter>
     );
