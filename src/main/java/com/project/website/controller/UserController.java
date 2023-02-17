@@ -94,7 +94,7 @@ public class UserController {
 
     @PostMapping(path= "/public/login", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> loginUser(@RequestBody User user, HttpServletResponse response) throws Exception {
-
+        Map<String, String> message = new HashMap<>();
         User userFound = userService.authUser(user.getEmail(), user.getPassword());
 
         if(userFound != null){
@@ -124,8 +124,9 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(userFound);
 
         }
-
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        message.put("STATUS", "REGISTERED SUCCESSFULLY");
+        message.put("CODE", String.valueOf(HttpStatus.FORBIDDEN.value()));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(message);
     }
 
     @PutMapping(path= "/{id}/update", consumes = "application/json", produces = "application/json")

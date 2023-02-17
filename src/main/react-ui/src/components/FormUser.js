@@ -60,11 +60,8 @@ function FormUser({title, hideUsernameField, login}) {
         }
 
         if (!success) {
-            console.log(statusCode);
             setErrors(error);
         }
-
-        console.log(success);
     }, [success, error]);
     return (
         <Fragment>

@@ -1,4 +1,5 @@
 import {toast} from "react-toastify";
+import LoaderSpinner from "../components/LoaderSpinner";
 
 const url = "http://localhost:8080";
 
@@ -25,7 +26,11 @@ export const loginUser = async ({email, password}) => {
             'Content-type': 'application/json; charset=UTF-8',
         },
 
-    }).then(response => response.json())
+    }).then(response => {
+        if(response.ok) {
+            return response.json();
+        }
+    })
 
 };
 
@@ -69,6 +74,7 @@ export const logout = async ({id}) => {
 };
 
 export const refreshToken = async ({id}) => {
+
     await fetch(`${url}/api/user/public/refresh-token`, {
         method: 'GET',
         credentials: "include",

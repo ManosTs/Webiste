@@ -1,6 +1,5 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {authUser, logoutUser, refreshUser, registerUser} from "../actions/userActions";
-import {refreshToken} from "../services/serviceApi";
 
 const initialState = {
     loading: false,

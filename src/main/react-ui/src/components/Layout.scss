@@ -1,3 +1,6 @@
+.main-page{
+  margin-top: 70px;
+}
 .header--container{
   width: 100%;
   display: flex;
@@ -6,49 +9,70 @@
   background: #ac9c9c;
   padding: 10px 0;
   column-gap: 20px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  height: 50px;
   &__logo{
-    padding: 10px;
+    padding: 10px 10px 10px 20px;
     font-size: 24px;
     cursor: pointer;
     text-decoration: none;
     color: white;
-    border-right: 1px solid #FF3D00;
   }
   &__sessionTime{
     display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: space-evenly;
+    color: white;
   }
   &__links{
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-right: auto;
-    flex: 0 0 20%;
 
   }
   &__search{
     margin-left: auto;
     margin-right: auto;
     width: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    &>svg{
+      position: absolute;
+      left: 0;
+      color: #ac9c9c;
+    }
 
     &>input{
       width: 100%;
       outline: none;
       border: none;
-      padding: 10px 0 10px 10px;
+      padding: 10px 0 10px 25px;
     }
 
   }
+  &__link.active{
+    background-color: #FF3D00;
+
+  }
   &__link{
-    font-size: 20px;
+    font-size: 16px;
     padding: 10px;
     cursor: pointer;
     text-decoration: none;
     color: white;
     border-right: 1px solid #FF3D00;
     width: 100%;
+    transition: all .4s ease-in-out;
+    text-transform: uppercase;
+    font-weight: bold;
     &:hover{
       background-color: rgba(#FF3D00, 0.6);
       transition: all .3s ease-in-out;
@@ -67,7 +91,7 @@
     font-weight: 200;
     width: 100px;
     cursor: pointer;
-    margin-right: 10px;
+    margin-right: 20px;
     &:hover{
       transition: all .3s ease-in-out;
       color: white;
