@@ -7,11 +7,16 @@ import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {authUser, registerUser} from "../actions/userActions";
 import {loginUser} from "../services/serviceApi.js";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 
 function FormUser({title, hideUsernameField, login}) {
     const usernameRef = useRef('');
     const passwordRef = useRef('');
     const emailRef = useRef('');
+    const [showPass, setShowPass] = useState(false);
     const [dataUser, setDataUser] = useState({});
     const [errors, setErrors] = useState({});
     let history = useNavigate();
@@ -46,6 +51,10 @@ function FormUser({title, hideUsernameField, login}) {
 
     };
 
+    const togglePassword = () => {
+          setShowPass(!showPass);
+    };
+
     useEffect(() => {
         console.log(success);
         if (login && success) {
@@ -63,6 +72,15 @@ function FormUser({title, hideUsernameField, login}) {
             setErrors(error);
         }
     }, [success, error]);
+
+
+    useEffect(() => {
+
+        if (!showPass) {
+
+        }
+    }, [showPass]);
+
     return (
         <Fragment>
             <div className="background-image"></div>
@@ -79,6 +97,7 @@ function FormUser({title, hideUsernameField, login}) {
                                 placeholder="Username"
                                 onChange={handleOnChangeEvent}
                             />
+                            <PermIdentityIcon />
                             {errors?.username?.length > 0 &&
                                 <p className="errors">{errors.username}</p>}
                         </div>}
@@ -95,6 +114,7 @@ function FormUser({title, hideUsernameField, login}) {
 
                                 onChange={handleOnChangeEvent}
                             />
+                            <MailOutlineIcon />
                             {errors?.email?.length > 0 &&
                                 <p className="errors">{errors.email}</p>}
                         </div>
@@ -102,13 +122,15 @@ function FormUser({title, hideUsernameField, login}) {
                         <div className="input-field">
                             <input
                                 ref={passwordRef}
-                                type="password"
+                                type={showPass ? "text" : "password"}
                                 id="password"
                                 name="password"
                                 className="addUser--wrapper__input"
                                 placeholder="Password"
                                 onChange={handleOnChangeEvent}
                             />
+                            {showPass && <VisibilityIcon onClick={togglePassword} />}
+                            {!showPass && <VisibilityOffIcon onClick={togglePassword} />}
                             {errors?.password?.length > 0 &&
                                 <p className="errors">{errors.password}</p>}
 
