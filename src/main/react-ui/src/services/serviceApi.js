@@ -59,7 +59,7 @@ export const retrieveUsers = async ({page, size, id}) => {
 export const logout = async ({id}) => {
     return await fetch(`${url}/api/user/public/logout?id=${id}`, {
         method: 'GET',
-        credentials: "include",
+        credentials: 'include',
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
         },
@@ -97,8 +97,9 @@ export const refreshToken = async ({id}) => {
             return response;
         }
 
-        if(response.status === 403){
-
+        if(response.status === 403 || response.status === 401){
+            const userDetails = JSON.parse(sessionStorage.getItem("login-details"));
+            id = userDetails.id;
             logout({id}).then(data => {
                 sessionStorage.clear();
                 localStorage.clear();

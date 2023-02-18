@@ -6,7 +6,7 @@ import "./Layout.scss";
 import Countdown from "react-countdown";
 import React from "react";
 import {ToastContainer} from "react-toastify";
-import SearchIcon from '@mui/icons-material/Search';
+// import SearchIcon from '@mui/icons-material/Search';
 function Layout({memoCountdown,children}){
     const [loggedUser, setLoggedUser] = useState({});
     const history = useNavigate();
@@ -57,7 +57,7 @@ function Layout({memoCountdown,children}){
                 <div className="header--container">
                     <NavLink to={'/'} className="header--container__logo">LOGO</NavLink>
                     <div className="header--container__links">
-                        <NavLink to={'/profile'}
+                        <NavLink to={`/profile/${loggedUser.id}`}
                                  className="header--container__link">{loggedUser.username}</NavLink>
                         {/*<NavLink to={'/settings'} className="header--container__link">Settings</NavLink>*/}
                         <NavLink to={'/discover'}

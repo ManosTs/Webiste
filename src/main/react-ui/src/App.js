@@ -11,6 +11,7 @@ import Layout from "./components/Layout";
 import Discover from "./components/Discover";
 import Countdown from "react-countdown";
 import Profile from "./components/Profile";
+import Tab from "./components/Tab";
 
 function App() {
     const CountDownWrapper = () => <Countdown date={Date.now() + 60 * 1000}/>;
@@ -25,26 +26,20 @@ function App() {
                        element={<SecureRoute><Layout memoCountdown={<MemoCountDown/>}><Home/></Layout></SecureRoute>}/>
                 <Route path="/discover" element={<SecureRoute><Layout
                     memoCountdown={<MemoCountDown/>}><Discover/></Layout></SecureRoute>}/>
-                <Route path="/profile"
+                <Route path="/profile/:id"
                        element={<SecureRoute>
                            <Layout memoCountdown={<MemoCountDown/>}>
                                <Profile/>
                            </Layout>
                        </SecureRoute>}>
                     <Route path="tab1" element={<SecureRoute>
-                        <Layout memoCountdown={<MemoCountDown/>}>
-                            <Profile/>
-                        </Layout>
+                            <Tab />
                     </SecureRoute>}/>
                     <Route path="tab2" element={<SecureRoute>
-                        <Layout memoCountdown={<MemoCountDown/>}>
-                            <Profile/>
-                        </Layout>
+                        <Tab />
                     </SecureRoute>}/>
                     <Route path="tab3" element={<SecureRoute>
-                        <Layout memoCountdown={<MemoCountDown/>}>
-                            <Profile/>
-                        </Layout>
+                        <Tab />
                     </SecureRoute>}/>
                 </Route>
             </Routes>

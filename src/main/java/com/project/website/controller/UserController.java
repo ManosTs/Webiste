@@ -28,6 +28,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
 import java.sql.Ref;
 import java.time.LocalDate;
@@ -198,7 +199,7 @@ public class UserController {
 
     @GetMapping(path = "/public/refresh-token")
     public ResponseEntity<?> refreshToken(HttpServletRequest request,
-                                          HttpServletResponse response){
+                                          HttpServletResponse response) throws IOException {
         Map<String, String> result = new HashMap<>();
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
@@ -218,16 +219,25 @@ public class UserController {
         }
 
         DefaultClaims claims = (DefaultClaims) request.getAttribute("claims");
+        String newToken = "";
+        try {
+            newToken = jwtTokenUtil.generateToken(refreshTokenFound.getUser(), claims);
+            refreshTokenFound.getUser().setAccessToken(newToken);
+            userRepository.save(refreshTokenFound.getUser());
+            response.addHeader("Set-Cookie","access_token=Bearer%20"+ newToken + "; Path=/; Secure; HttpOnly; SameSite=Lax; domain=localhost; Expires="+jwtTokenUtil.getExpirationDateFromToken(newToken)+";");
+            response.addHeader("Set-Cookie","refresh_token="+ refreshTokenFound.getToken() + "; Path=/; Secure; HttpOnly; SameSite=Lax; domain=localhost; Expires="+refreshTokenFound.getExpireDate()+";");
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (IllegalArgumentException e) {
+            System.out.println("Unable to get JWT Token");
 
-        final String newToken = jwtTokenUtil.generateToken(refreshTokenFound.getUser(), claims);
+        }
 
-        refreshTokenFound.getUser().setAccessToken(newToken);
-        userRepository.save(refreshTokenFound.getUser());
 
-        response.addHeader("Set-Cookie","access_token=Bearer%20"+ newToken + "; Path=/; Secure; HttpOnly; SameSite=Lax; domain=localhost; Expires="+jwtTokenUtil.getExpirationDateFromToken(newToken)+";");
-        response.addHeader("Set-Cookie","refresh_token="+ refreshTokenFound.getToken() + "; Path=/; Secure; HttpOnly; SameSite=Lax; domain=localhost; Expires="+refreshTokenFound.getExpireDate()+";");
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+
 
     }
 

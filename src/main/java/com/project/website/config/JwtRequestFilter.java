@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.project.website.entity.User;
 import com.project.website.service.UserService;
+import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
@@ -81,7 +82,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 email = jwtTokenUtil.getEmailFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
                 System.out.println("Unable to get JWT Token");
-            } catch (ExpiredJwtException e) {
+                if(!request.getRequestURI().equals("/api/user/public/logout"))
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            }catch (SignatureException e) {
+                System.out.println("Unauthorized Token");
+                if(!request.getRequestURI().equals("/api/user/public/logout"))
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            }catch (ExpiredJwtException e) {
                 System.out.println("JWT Token has expired");
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         null, null, null);

@@ -1,5 +1,5 @@
 import "./Layout.scss";
-import {NavLink} from "react-router-dom";
+import {NavLink, Outlet} from "react-router-dom";
 import "./Profile.scss";
 import {useEffect, useState} from "react";
 
@@ -38,6 +38,7 @@ function Profile(){
                     <li><NavLink to={'tab3'}>TAB 3</NavLink></li>
                 </ul>
             </div>
+            <Outlet />
         </div>
     );
 }
