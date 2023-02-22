@@ -83,9 +83,52 @@
   }
   .profile--settings{
     background: #ac9c9c;
+    h2{
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 10px 0;
+      width: 100%;
+      background-color: #FF3D00;
+    }
   }
   .profile--friends{
     background: #ac9c9c;
+    &__innerWrapper{
+      background:none;
+      color: white;
+      width: 100%;
+      transition: all .3s ease-in-out;
+      ul{
+        margin: 0;
+        padding: 0;
+        li{
+          margin: 0;
+          list-style: none;
+
+          a{
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            border-bottom: 1px solid #ead6d6;
+            padding: 10px 5px;
+            cursor: pointer;
+            &:hover{
+              background-color: rgba(#f8e8e8, 0.2);
+            }
+          }
+        }
+      }
+
+    }
+    h2{
+      color: white;
+      text-align: center;
+      width: 100%;
+      background-color: #FF3D00;
+      margin: 0;
+      padding: 10px 0;
+    }
   }
 }
 

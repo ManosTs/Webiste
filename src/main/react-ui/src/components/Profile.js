@@ -23,7 +23,7 @@ function Profile(){
     return(
         <div className="profile-grid">
             <div className="profile--settings">
-
+                <h2>Settings</h2>
             </div>
             <div className="profile--wrapper">
                 <div className="profile--wrapper__media">
@@ -44,8 +44,18 @@ function Profile(){
                 </div>
                 <Outlet />
             </div>
-            <div className="profile--settings">
-
+            <div className="profile--friends">
+                <h2>Friends</h2>
+                <div className="profile--friends__innerWrapper">
+                    <ul>
+                        <li>
+                            <a>FRIEND 1</a>
+                        </li>
+                        <li>
+                            <a>FRIEND 2</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 
