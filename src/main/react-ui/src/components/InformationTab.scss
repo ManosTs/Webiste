@@ -1,0 +1,47 @@
+.information--tab{
+  background: #ac9c9c;
+  &__info{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border-bottom: 1px solid #e1d0d0;
+    &:last-child{
+      border-bottom: none;
+    }
+    p{
+      padding: 10px;
+      color: white;
+      &:nth-child(2){
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+
+  }
+  &__updateProfile{
+    background: none;
+    border: none;
+    outline: none;
+    padding: 10px;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    min-height: 74px;
+    svg{
+      color: white;
+      font-size: 16px;
+      margin-right: 2px;
+    }
+    p{
+      margin: 0;
+      padding: 0;
+    }
+    &:hover{
+      background: #FF3D00;
+      color: white;
+    }
+  }
+}

@@ -12,6 +12,10 @@ import Discover from "./components/Discover";
 import Countdown from "react-countdown";
 import Profile from "./components/Profile";
 import Tab from "./components/Tab";
+import FriendsTab from "./components/FriendsTab";
+import {Info} from "@mui/icons-material";
+import InformationTab from "./components/InformationTab";
+import PostsTab from "./components/PostsTab";
 
 function App() {
     const CountDownWrapper = () => <Countdown date={Date.now() + 60 * 1000}/>;
@@ -32,14 +36,14 @@ function App() {
                                <Profile/>
                            </Layout>
                        </SecureRoute>}>
-                    <Route path="tab1" element={<SecureRoute>
-                            <Tab />
+                    <Route path="posts" element={<SecureRoute>
+                            <PostsTab />
                     </SecureRoute>}/>
-                    <Route path="tab2" element={<SecureRoute>
-                        <Tab />
+                    <Route path="friends" element={<SecureRoute>
+                        <FriendsTab />
                     </SecureRoute>}/>
-                    <Route path="tab3" element={<SecureRoute>
-                        <Tab />
+                    <Route path="information" element={<SecureRoute>
+                        <InformationTab />
                     </SecureRoute>}/>
                 </Route>
             </Routes>

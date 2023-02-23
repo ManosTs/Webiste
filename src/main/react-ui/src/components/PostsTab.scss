@@ -1,0 +1,29 @@
+.posts--tab{
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__post{
+    width: 600px;
+    border: 1px solid #ac9c9c;
+    height: 500px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__header{
+    border-bottom: 1px solid #ac9c9c;
+  }
+
+  &__description{
+
+  }
+
+  &__image{
+    background: #ac9c9c;
+    width: 100%;
+    height: 100%;
+  }
+}

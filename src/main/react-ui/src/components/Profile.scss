@@ -34,12 +34,19 @@
     &__info{
       display: flex;
       align-items: center;
-      justify-content: center;
-      flex-direction: column;
+      justify-content: space-between;
       width: 100%;
       margin: 5px 0;
     }
+    &__infoItem.user-info{
+      text-align: right;
+    }
+
+    &__tabs:has(a.active){
+      border-bottom: 1px solid #e1d0d0;
+    }
     &__tabs{
+
       ul{
         display: flex;
         margin: 0;
@@ -121,72 +128,6 @@
       background-color: #FF3D00;
     }
   }
-  .profile--friends{
-    background: #ac9c9c;
-    &__innerWrapper{
-      background:none;
-      color: white;
-      width: 100%;
-      transition: all .3s ease-in-out;
-      ul{
-        margin: 0;
-        padding: 0;
-        li{
-          margin: 0;
-          list-style: none;
 
-          .profile--friends__info{
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            border-bottom: 1px solid #ead6d6;
-            padding: 10px 5px;
-            cursor: pointer;
-            color: white;
-            &:hover{
-              background-color: rgba(#f8e8e8, 0.2);
-            }
-          }
-        }
-      }
-
-    }
-    &__info{
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 5px;
-    }
-    &__imageWrapper{
-      position: relative;
-
-        img{
-          width: 50px;
-          height: 50px;
-          background: #FF3D00;
-          border-radius: 50%;
-          border: none;
-        }
-
-      span{
-        position: absolute;
-        bottom: -4px;
-        right: -3px;
-        border: none;
-        svg{
-          font-size: 20px;
-          color: #04b704;
-        }
-      }
-    }
-    h2{
-      color: white;
-      text-align: center;
-      width: 100%;
-      background-color: #FF3D00;
-      margin: 0;
-      padding: 10px 0;
-    }
-  }
 }
 

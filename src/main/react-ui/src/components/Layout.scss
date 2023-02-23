@@ -16,6 +16,12 @@
   bottom: 0;
   height: 50px;
   box-shadow: 0 2px 5px 0px #593b3b;
+  &__prof-image{
+    width: 50px;
+    height: 50px;
+    background: #e1d0d0;
+    border-radius: 50%;
+  }
   &__logo{
     padding: 10px 10px 10px 20px;
     font-size: 24px;
@@ -35,6 +41,7 @@
     align-items: center;
     justify-content: space-between;
     margin-right: auto;
+    column-gap: 10px;
 
   }
   &__search{
@@ -59,11 +66,15 @@
     }
 
   }
+
+  &__link.profile-pic.active{
+    background: none !important;
+  }
   &__link.active{
     background-color: #FF3D00;
 
   }
-  &__link{
+  &__link:not(.profile-pic){
     font-size: 16px;
     padding: 10px;
     cursor: pointer;

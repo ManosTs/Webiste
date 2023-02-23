@@ -58,7 +58,9 @@ function Layout({memoCountdown,children}){
                     <NavLink to={'/'} className="header--container__logo">LOGO</NavLink>
                     <div className="header--container__links">
                         <NavLink to={`/profile/${loggedUser.id}`}
-                                 className="header--container__link">{loggedUser.username}</NavLink>
+                                 className="header--container__link profile-pic">
+                            <img alt="" className="header--container__prof-image"/>
+                        </NavLink>
                         {/*<NavLink to={'/settings'} className="header--container__link">Settings</NavLink>*/}
                         <NavLink to={'/discover'}
                                  className="header--container__link">Discover</NavLink>
