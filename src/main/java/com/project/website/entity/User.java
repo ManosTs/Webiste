@@ -1,10 +1,12 @@
 package com.project.website.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.website.annotations.password.Password;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,6 +29,20 @@ public class User implements UserDetails {
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     private String id;
+
+    @Column(nullable = false)
+    @NotBlank(message = "First Name is mandatory")
+    private String firstName;
+
+    @Column(nullable = false)
+    @NotBlank(message = "Last Name is mandatory")
+    private String lastName;
+
+    @Column(nullable = false)
+    private Date birthDate;
+
+    @Column(nullable = false)
+    private Gender gender;
 
     @Column(nullable = false, unique = true)
     @NotBlank(message = "Username is mandatory")
@@ -68,6 +84,38 @@ public class User implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
     @Override
@@ -130,5 +178,11 @@ public class User implements UserDetails {
 
     public Set<Role> getRoles() {
         return roles;
+    }
+
+    public enum Gender{
+        Female,
+        Male,
+        Other
     }
 }

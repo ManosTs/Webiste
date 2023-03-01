@@ -11,9 +11,14 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
+import { format } from 'date-fns'
 
-function FormUser({title, hideUsernameField, login}) {
+function FormUser({title, login}) {
     const usernameRef = useRef('');
+    const firstNameRef = useRef('');
+    const lastNameRef = useRef('');
+    const birthDateRef = useRef('');
+    const genderRef = useRef('');
     const passwordRef = useRef('');
     const emailRef = useRef('');
     const [showPass, setShowPass] = useState(false);
@@ -28,6 +33,10 @@ function FormUser({title, hideUsernameField, login}) {
     const handleOnChangeEvent = () => {
         setDataUser({
             username: usernameRef.current.value,
+            firstName: firstNameRef.current.value,
+            lastName: lastNameRef.current.value,
+            birthDate: birthDateRef.current.value,
+            gender: genderRef.current.value,
             password: passwordRef.current.value,
             email: emailRef.current.value
         });
@@ -52,7 +61,7 @@ function FormUser({title, hideUsernameField, login}) {
     };
 
     const togglePassword = () => {
-          setShowPass(!showPass);
+        setShowPass(!showPass);
     };
 
     useEffect(() => {
@@ -86,7 +95,7 @@ function FormUser({title, hideUsernameField, login}) {
             <div className="background-image"></div>
             <div className="addUser--wrapper">
                 <form className="addUser--wrapper__form" onSubmit={handleSubmit}>
-                    {hideUsernameField === false &&
+                    {!login &&
                         <div className="input-field">
                             <input
                                 ref={usernameRef}
@@ -97,55 +106,124 @@ function FormUser({title, hideUsernameField, login}) {
                                 placeholder="Username"
                                 onChange={handleOnChangeEvent}
                             />
-                            <PermIdentityIcon />
+                            <PermIdentityIcon/>
                             {errors?.username?.length > 0 &&
                                 <p className="errors">{errors.username}</p>}
                         </div>}
+                    <div className="input-field">
+                        {login && errors?.length > 0 &&
+                            <p className="errors login">{errors === "Rejected" ? "ACCESS DENIED" : ""}</p>}
+                        <input
+                            ref={emailRef}
+                            type="text"
+                            id="email"
+                            name="email"
+                            className="addUser--wrapper__input"
+                            placeholder="Email"
+
+                            onChange={handleOnChangeEvent}
+                        />
+                        <MailOutlineIcon/>
+                        {errors?.email?.length > 0 &&
+                            <p className="errors">{errors.email}</p>}
+                    </div>
+                    {!login &&
                         <div className="input-field">
-                            {login&&errors?.length > 0 &&
-                                <p className="errors login">{errors === "Rejected" ? "ACCESS DENIED": ""}</p>}
                             <input
-                                ref={emailRef}
+                                ref={firstNameRef}
                                 type="text"
-                                id="email"
-                                name="email"
+                                id="firstName"
+                                name="firstName"
                                 className="addUser--wrapper__input"
-                                placeholder="Email"
-
+                                placeholder="First Name"
                                 onChange={handleOnChangeEvent}
                             />
-                            <MailOutlineIcon />
-                            {errors?.email?.length > 0 &&
-                                <p className="errors">{errors.email}</p>}
-                        </div>
-
+                            <PermIdentityIcon/>
+                            {errors?.firstName?.length > 0 &&
+                                <p className="errors">{errors.firstName}</p>}
+                        </div>}
+                    {!login &&
                         <div className="input-field">
                             <input
-                                ref={passwordRef}
-                                type={showPass ? "text" : "password"}
-                                id="password"
-                                name="password"
+                                ref={lastNameRef}
+                                type="text"
+                                id="lastName"
+                                name="lastName"
                                 className="addUser--wrapper__input"
-                                placeholder="Password"
+                                placeholder="Last Name"
                                 onChange={handleOnChangeEvent}
                             />
-                            {showPass && <VisibilityIcon onClick={togglePassword} />}
-                            {!showPass && <VisibilityOffIcon onClick={togglePassword} />}
-                            {errors?.password?.length > 0 &&
-                                <p className="errors">{errors.password}</p>}
+                            <PermIdentityIcon/>
+                            {errors?.lastName?.length > 0 &&
+                                <p className="errors">{errors.lastName}</p>}
+                        </div>}
+                    {!login &&
+                        <div className="input-field">
+                            <input
+                                ref={birthDateRef}
+                                type="date"
+                                id="birthDate"
+                                name="birthDate"
+                                className="addUser--wrapper__input"
+                                placeholder="Birth Date"
+                                onChange={handleOnChangeEvent}
+                            />
+                            {errors?.birthDate?.length > 0 &&
+                                <p className="errors">{errors.birthDate}</p>}
+                        </div>}
 
-                        </div>
+                    <div className="input-field">
+                        <input
+                            ref={passwordRef}
+                            type={showPass ? "text" : "password"}
+                            id="password"
+                            name="password"
+                            className="addUser--wrapper__input"
+                            placeholder="Password"
+                            onChange={handleOnChangeEvent}
+                        />
+                        {showPass && <VisibilityIcon onClick={togglePassword}/>}
+                        {!showPass && <VisibilityOffIcon onClick={togglePassword}/>}
+                        {errors?.password?.length > 0 &&
+                            <p className="errors">{errors.password}</p>}
 
-                    {login && <NavLink to="/register" className="addUser--wrapper__registerMsg">No account? Register Now</NavLink>}
-                        <button className="addUser--wrapper__button" type="submit">SUBMIT</button>
-                        </form>
-                        <p className="addUser--wrapper__title">{title}</p>
+                    </div>
+                    {!login &&
+                        <div className="input-field">
+                            {/*<input*/}
+                            {/*    ref={genderRef}*/}
+                            {/*    type="text"*/}
+                            {/*    id="gender"*/}
+                            {/*    name="gender"*/}
+                            {/*    className="addUser--wrapper__input"*/}
+                            {/*    placeholder="Gender"*/}
+                            {/*    onChange={handleOnChangeEvent}*/}
+                            {/*/>*/}
+                            <select
+                                ref={genderRef}
+                            onChange={handleOnChangeEvent}>
 
-                    {loading && <LoaderSpinner />}
-                        </div>
-                        </Fragment>
+                                <option value="Male">Male</option>
 
-                        );
-                    }
+                                <option value="Female">Female</option>
 
-                    export default FormUser;
+                                <option value="Other">Other</option>
+
+                            </select>
+                            {errors?.gender?.length > 0 &&
+                                <p className="errors">{errors.gender}</p>}
+                        </div>}
+                    {login && <NavLink to="/register" className="addUser--wrapper__registerMsg">No account? Register
+                        Now</NavLink>}
+                    <button className="addUser--wrapper__button" type="submit">SUBMIT</button>
+                </form>
+                <p className="addUser--wrapper__title">{title}</p>
+
+                {loading && <LoaderSpinner/>}
+            </div>
+        </Fragment>
+
+    );
+}
+
+export default FormUser;

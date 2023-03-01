@@ -3,10 +3,10 @@ import LoaderSpinner from "../components/LoaderSpinner";
 
 const url = "http://localhost:8080";
 
-export const addUser = async ({username, email, password}) => {
+export const addUser = async ({username, email, firstName, lastName, gender, birthDate,password}) => {
     return await fetch(`${url}/api/user/public/register`, {
         method: 'POST',
-        body: JSON.stringify({username:username, email:email, password:password}),
+        body: JSON.stringify({username:username, firstName:firstName, lastName:lastName, gender:gender, birthDate:birthDate,email:email, password:password}),
         headers: {
             'Content-type': 'application/json; charset=UTF-8',
         },

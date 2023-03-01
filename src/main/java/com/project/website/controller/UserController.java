@@ -80,7 +80,7 @@ public class UserController {
 
 
 
-        User newUser = userService.createUser(user.getEmail(), user.getUsername(), user.getPassword());
+        User newUser = userService.createUser(user);
         if(newUser == null){
             message.put("STATUS", "EMAIL ALREADY EXISTS");
             message.put("CODE", String.valueOf(HttpStatus.BAD_REQUEST.value()));

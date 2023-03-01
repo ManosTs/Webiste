@@ -1,7 +1,7 @@
 .addUser--wrapper{
   background-color: rgba(darkgrey, 0.7);
   width: 350px;
-  height: 200px;
+  height: fit-content;
   position: fixed;
   left: 0;
   right: 0;
@@ -98,8 +98,26 @@
       row-gap: 50px;
       padding: 20px 0;
     }
+    ::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      font-size: 16px;
+    }
     .input-field{
       position: relative;
+
+      select{
+        padding: 10px 0 5px;
+        outline: none;
+        border: none;
+        border-bottom: 1px solid #fff;
+        background: none;
+        transition: all .3s ease-in-out;
+        width: 100%;
+        color: white;
+        option{
+          background: #ac9c9c;
+        }
+      }
       svg{
         position: absolute;
         right: 0;

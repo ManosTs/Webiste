@@ -18,6 +18,10 @@ function Profile(){
             username:userDetails.username,
             id:userDetails.id,
             email:userDetails.email,
+            firstName:userDetails.firstName,
+            lastName: userDetails.lastName,
+            gender: userDetails.gender,
+            birthDate: userDetails.birthDate,
             roleName: userDetails.roles[0].name
 
         });
@@ -39,8 +43,7 @@ function Profile(){
 
                     </div>
                     <div className="profile--wrapper__infoItem user-info">
-                        <div className="profile--wrapper__username">{loggedUser.username}</div>
-                        <div className="profile--wrapper__email">{loggedUser.email}</div>
+                        <div className="profile--wrapper__username">{loggedUser.firstName + " " + loggedUser.lastName}</div>
                     </div>
 
                 </div>

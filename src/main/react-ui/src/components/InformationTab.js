@@ -16,6 +16,10 @@ function InformationTab () {
             username:userDetails.username,
             id:userDetails.id,
             email:userDetails.email,
+            firstName:userDetails.firstName,
+            lastName: userDetails.lastName,
+            gender: userDetails.gender,
+            birthDate: userDetails.birthDate,
             roleName: userDetails.roles[0].name
 
         });
@@ -25,7 +29,7 @@ function InformationTab () {
         <div className="information--tab">
             <div className="information--tab__info">
                 <p>Full name</p>
-                <p>VALUE</p>
+                <p>{loggedUser.firstName + " " + loggedUser.lastName}</p>
                 <button type="button" className="information--tab__updateProfile">
                     <BuildIcon />
                     <p>Update</p>
@@ -53,7 +57,7 @@ function InformationTab () {
 
             <div className="information--tab__info">
                 <p>Birth date</p>
-                <p>VALUE</p>
+                <p>{loggedUser.birthDate}</p>
                 <button type="button" className="information--tab__updateProfile">
                     <BuildIcon />
                     <p>Update</p>
@@ -63,7 +67,7 @@ function InformationTab () {
 
             <div className="information--tab__info">
                 <p>Gender</p>
-                <p>VALUE</p>
+                <p>{loggedUser.gender}</p>
                 <button type="button" className="information--tab__updateProfile">
                     <BuildIcon />
                     <p>Update</p>

@@ -28,9 +28,9 @@ export const refreshUser = createAsyncThunk('user/refresh-token', async ({id}, {
 })
 
 export const registerUser = createAsyncThunk('user/register',
-    async ({username, email, password}, { rejectWithValue }) => {
+    async ({username, email, firstName, lastName, gender, birthDate,password}, { rejectWithValue }) => {
     try{
-        const response = await addUser({username, email, password}).then(data => data).catch(error => error);
+        const response = await addUser({username, email, firstName, lastName, gender, birthDate,password}).then(data => data).catch(error => error);
 
         if (response?.CODE !== "200") {
             return rejectWithValue(response)

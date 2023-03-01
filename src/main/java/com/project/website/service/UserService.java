@@ -55,22 +55,26 @@ public class UserService implements UserDetailsService {
         this.roleRepository = roleRepository;
     }
 
-    public User createUser(String email, String username, String password){
-        User userFound = userRepository.findByEmail(email);
+    public User createUser(User user){
+        User userFound = userRepository.findByEmail(user.getEmail());
         if(userFound != null){
             return null; //user exists
         }
 
         User newUser = new User(); //create new user
 
-        String encodedPassword = bCryptPasswordEncoder.encode(password); //encode code
+        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword()); //encode code
 
         Role role = roleRepository.findRoleByName("ROLE_USER"); //add role to the user
 
         //save user
-        newUser.setEmail(email);
-        newUser.setUsername(username);
+        newUser.setEmail(user.getEmail());
+        newUser.setUsername(user.getUsername());
         newUser.setPassword(encodedPassword);
+        newUser.setFirstName(user.getFirstName());
+        newUser.setLastName(user.getLastName());
+        newUser.setBirthDate(user.getBirthDate());
+        newUser.setGender(user.getGender());
         newUser.addRole(role);
 
         return userRepository.save(newUser);
