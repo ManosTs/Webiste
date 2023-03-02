@@ -34,6 +34,27 @@ export const loginUser = async ({email, password}) => {
 
 };
 
+
+export const addFriend = async ({userID, friendID}) => {
+    return await fetch(`${url}/api/user/addFriend`, {
+        method: 'POST',
+        body: JSON.stringify({
+            user: userID,
+            friendId: friendID
+        }),
+        credentials: "include",
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+
+    }).then(response => {
+        if(response.ok) {
+            return response.json();
+        }
+    })
+
+};
+
 export const retrieveUsers = async ({page, size, id}) => {
     return await fetch(`${url}/api/user/getAll?pageNo=${page}&pageSize=${size}`, {
         method: 'GET',

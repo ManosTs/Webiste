@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {logoutUser} from "../actions/userActions";
-import {retrieveUsers} from "../services/serviceApi";
+import {retrieveUsers, addFriend} from "../services/serviceApi";
 import UserList from "./UserList";
 
 
@@ -22,6 +22,7 @@ function Discover () {
 
 
     };
+
 
     const retrieveAsyncUsers = async (page) => {
         let size = 6;
@@ -50,7 +51,7 @@ function Discover () {
 
     return(
         <div className="discover-people--wrapper">
-            <UserList retrieveAsyncUsers={retrieveAsyncUsers} users={users} totalElements={users?.totalElements}/>
+            <UserList userid={loggedUser.id} retrieveAsyncUsers={retrieveAsyncUsers} users={users} totalElements={users?.totalElements}/>
         </div>
     );
 }

@@ -2,6 +2,7 @@ package com.project.website.controller;
 
 
 import com.project.website.config.JwtTokenUtil;
+import com.project.website.entity.Friend;
 import com.project.website.entity.MessageResponse;
 import com.project.website.entity.RefreshToken;
 import com.project.website.entity.User;
@@ -242,23 +243,16 @@ public class UserController {
 
     }
 
-    @GetMapping(path= "/access_token", produces = "application/json")
-    public ResponseEntity<Object> validateAccessToken(@RequestParam String id){
-        User user = userRepository.findUserById(id);
-
+    @PostMapping(path = "/addFriend")
+    public ResponseEntity<?> addFriend(@RequestBody Friend friend, HttpServletResponse response){
+        User user = userRepository.findUserById(friend.getUserId());
         if(user == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        boolean isTokenValid = jwtTokenUtil.validateToken(user.getAccessToken(), user);
+        user.addFriend(friend);
 
-        if(!isTokenValid)
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.ok().body("OK");
     }
 
-    private boolean isStringBlank(String string){
-        return string == null || string.trim().isEmpty();
-    }
 }
