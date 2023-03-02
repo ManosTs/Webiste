@@ -21,6 +21,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +58,7 @@ public class UserService implements UserDetailsService {
         this.roleRepository = roleRepository;
     }
 
-    public User createUser(User user){
+    public User createUser(User user) throws ParseException {
         User userFound = userRepository.findByEmail(user.getEmail());
         if(userFound != null){
             return null; //user exists
@@ -67,13 +70,18 @@ public class UserService implements UserDetailsService {
 
         Role role = roleRepository.findRoleByName("ROLE_USER"); //add role to the user
 
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        String birthDate = formatter.format(user.getBirthDate());
+
+        Date formattedBirthDate = formatter.parse(birthDate);
         //save user
         newUser.setEmail(user.getEmail());
         newUser.setUsername(user.getUsername());
         newUser.setPassword(encodedPassword);
         newUser.setFirstName(user.getFirstName());
         newUser.setLastName(user.getLastName());
-        newUser.setBirthDate(user.getBirthDate());
+        newUser.setBirthDate(formattedBirthDate);
         newUser.setGender(user.getGender());
         newUser.addRole(role);
 

@@ -1,6 +1,8 @@
 import "./InformationTab.scss";
 import BuildIcon from "@mui/icons-material/Build";
 import {useEffect, useState} from "react";
+import {format} from "date-fns";
+import Moment from "react-moment";
 
 
 
@@ -57,7 +59,9 @@ function InformationTab () {
 
             <div className="information--tab__info">
                 <p>Birth date</p>
-                <p>{loggedUser.birthDate}</p>
+                <p><Moment format="DD/MM/YYYY">
+                    {loggedUser.birthDate}
+                </Moment></p>
                 <button type="button" className="information--tab__updateProfile">
                     <BuildIcon />
                     <p>Update</p>

@@ -1,4 +1,4 @@
-import "./Layout.scss";
+import "../Layout.scss";
 import {NavLink, Outlet} from "react-router-dom";
 import "./Profile.scss";
 import {useEffect, useState} from "react";

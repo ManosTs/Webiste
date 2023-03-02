@@ -31,6 +31,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.sql.Ref;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -68,7 +69,7 @@ public class UserController {
     }
 
     @PostMapping(path= "/public/register", consumes = "application/json", produces = "application/json; charset=utf-8")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody User user) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody User user) throws ParseException {
         Map<String, String> message = new HashMap<>();
 
 //        if(isStringBlank(user.getEmail()) ||

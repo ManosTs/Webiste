@@ -2,6 +2,9 @@ import './UserList.scss';
 import ReactPaginate from "react-paginate";
 import {Fragment, useState} from "react";
 import {retrieveUsers} from "../services/serviceApi";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 function UserList({retrieveAsyncUsers, users, totalElements}) {
 
@@ -21,10 +24,18 @@ function UserList({retrieveAsyncUsers, users, totalElements}) {
                 {users && currentItems.map(
                     (obj, index) =>(
                         <li id={obj.id} key={index}>
-                            <p>USERNAME:</p>
-                            <p>{obj.username}</p>
-                            <p>EMAIL:</p>
-                            <p>{obj.email}</p>
+                            <img alt="" className="userList__profileImage"/>
+                            <p>{obj.firstName} {obj.lastName}</p>
+                            <div className="userList__actions">
+                                <button type="button" className="profile--wrapper__action add-friend">
+                                    <AddIcon />
+                                    <p>ADD FRIEND</p>
+                                </button>
+                                {/*<button type="button" className="profile--wrapper__action delete-friend">*/}
+                                {/*    <RemoveIcon />*/}
+                                {/*    <p>DELETE</p>*/}
+                                {/*</button>*/}
+                            </div>
                         </li>
                     )
                 )}

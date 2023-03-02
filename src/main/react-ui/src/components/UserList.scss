@@ -41,16 +41,17 @@
     list-style: none;
     padding: 0;
     text-align: center;
-    width: 500px;
+    width: 100%;
     position: relative;
     top: 0;
     left: 0;
     right: 0;
     margin: 0 auto;
+    height: fit-content;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
+    column-gap: 10px;
 
     li{
       background-color: #e1d0d0;
@@ -59,21 +60,54 @@
       letter-spacing: 0.08rem;
       font-size: 20px;
       margin: 10px 0;
-      width: 40%;
+      width: 150px;
+      height: 200px;
       word-break: break-word;
-      height: 120px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-around;
-
-      p{
-        margin: 0;
-        padding: 0;
-        font-size: 17px;
-        &:nth-child(2n+1){
-          font-weight: bold;
+      .userList__profileImage{
+        width: 100px;
+        height: 100px;
+        background: #FF3D00;
+        border-radius: 50%;
+      }
+      .userList__actions{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        row-gap: 10px;
+        button{
+          background: #FF3D00;
+          color: white;
+          border: none;
+          outline: none;
+          padding: 5px;
+          transition: all .3s ease-in-out;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          svg{
+            font-size: 14px;
+            margin-right: 2px;
+          }
+          p{
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+          }
+          &:hover{
+            background: none;
+          }
         }
+      }
+      p{
+        padding: 0;
+        margin: auto 0;
+        font-size: 17px;
       }
       &:first-child{
         border-top: none;

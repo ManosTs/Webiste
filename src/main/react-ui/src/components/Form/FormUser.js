@@ -1,12 +1,12 @@
-import * as api from '../services/serviceApi.js';
+import * as api from '../../services/serviceApi.js';
 import {Fragment, useEffect, useRef, useState} from "react";
 import './FormUser.scss';
-import LoaderSpinner from "./LoaderSpinner";
+import LoaderSpinner from "../LoaderSpinner";
 import {NavLink} from "react-router-dom";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {authUser, registerUser} from "../actions/userActions";
-import {loginUser} from "../services/serviceApi.js";
+import {authUser, registerUser} from "../../actions/userActions";
+import {loginUser} from "../../services/serviceApi.js";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
@@ -31,6 +31,8 @@ function FormUser({title, login}) {
     const dispatch = useDispatch();
 
     const handleOnChangeEvent = () => {
+
+
         setDataUser({
             username: usernameRef.current.value,
             firstName: firstNameRef.current.value,

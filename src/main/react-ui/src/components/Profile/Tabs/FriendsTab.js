@@ -11,7 +11,7 @@ function FriendsTab () {
             <div className="profile--friends__innerWrapper">
                 <ul>
                     <li>
-                        <a href="#" className="profile--friends__info">
+                        <a href="../.#" className="profile--friends__info">
                             <div className="profile--friends__imageWrapper">
                                 <img alt="" className="profile--friends__profileImage"/>
                                 <span className="friend--active--icon">
@@ -22,7 +22,7 @@ function FriendsTab () {
                         </a>
                     </li>
                     <li>
-                        <a href="#" className="profile--friends__info">
+                        <a href="../.#" className="profile--friends__info">
                             <div className="profile--friends__imageWrapper">
                                 <img alt="" className="profile--friends__profileImage"/>
                                 <span className="friend--active--icon">

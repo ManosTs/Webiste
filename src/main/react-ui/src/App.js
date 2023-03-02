@@ -1,5 +1,5 @@
 import './App.scss';
-import FormUser from "./components/FormUser";
+import FormUser from "./components/Form/FormUser";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Home from "./components/Home";
 import SecureRoute from "./SecureRoute";
@@ -10,12 +10,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import Layout from "./components/Layout";
 import Discover from "./components/Discover";
 import Countdown from "react-countdown";
-import Profile from "./components/Profile";
-import Tab from "./components/Tab";
-import FriendsTab from "./components/FriendsTab";
+import Profile from "./components/Profile/Profile";
+import Tab from "./components/Profile/Tabs/Tab";
+import FriendsTab from "./components/Profile/Tabs/FriendsTab";
 import {Info} from "@mui/icons-material";
-import InformationTab from "./components/InformationTab";
-import PostsTab from "./components/PostsTab";
+import InformationTab from "./components/Profile/Tabs/InformationTab";
+import PostsTab from "./components/Profile/Tabs/PostsTab";
 
 function App() {
     const CountDownWrapper = () => <Countdown date={Date.now() + 60 * 1000}/>;
