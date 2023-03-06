@@ -31,6 +31,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Ref;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -243,16 +245,42 @@ public class UserController {
 
     }
 
-    @PostMapping(path = "/addFriend")
-    public ResponseEntity<?> addFriend(@RequestBody Friend friend, HttpServletResponse response){
-        User user = userRepository.findUserById(friend.getUserId());
-        if(user == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    @PutMapping(path = "/addFriend/{friendID}")
+    public ResponseEntity<?> addFriend(@PathVariable String friendID, HttpServletRequest request){
+        Map<String, String> result = new HashMap<>();
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                result.put(cookie.getName(), cookie.getValue());
+            }
         }
+        String requestToken = "";
+        if(result.get("access_token") != null){
+
+            requestToken = decodeBase64Token(result.get("access_token"));
+
+        }
+        String userID = jwtTokenUtil.getUserIDFromToken(requestToken.substring(7));
+
+        User user = userRepository.findUserById(userID);
+
+        if(user == null){
+            return ResponseEntity.badRequest().body("ID NOT FOUND");
+        }
+
+        Friend friend = new Friend();
+
+        friend.setUser(user);
+        friend.setFriendId(friendID);
 
         user.addFriend(friend);
 
+        userRepository.save(user);
         return ResponseEntity.ok().body("OK");
     }
+    private String decodeBase64Token(String encodedString) {
 
+
+        return URLDecoder.decode(encodedString, StandardCharsets.UTF_8);
+    }
 }

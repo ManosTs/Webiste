@@ -14,7 +14,7 @@ function UserList({retrieveAsyncUsers, users, totalElements, userid}) {
     const pageCount = Math.ceil(totalElements / 6);
     const addFriendHandler = async () => {
         let userID = userid;
-        let friendID = "cabbe980-9175-4f7e-b897-c7e7372646ce"
+        let friendID = "554c7282-e471-46c1-9f05-af3751dae39f"
         await addFriend({userID, friendID})
             .then(data => data)
             .catch(error => console.log(error));

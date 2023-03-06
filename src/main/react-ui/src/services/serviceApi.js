@@ -35,13 +35,9 @@ export const loginUser = async ({email, password}) => {
 };
 
 
-export const addFriend = async ({userID, friendID}) => {
-    return await fetch(`${url}/api/user/addFriend`, {
-        method: 'POST',
-        body: JSON.stringify({
-            user: userID,
-            friendId: friendID
-        }),
+export const addFriend = async ({friendID}) => {
+    return await fetch(`${url}/api/user/addFriend/${friendID}`, {
+        method: 'PUT',
         credentials: "include",
         headers: {
             'Content-type': 'application/json; charset=UTF-8',

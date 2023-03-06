@@ -1,6 +1,7 @@
 package com.project.website.entity;
 
 
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 public class Friend {
     @Id
     @GeneratedValue(generator = "UUID")
+    @JsonIgnore
     @GenericGenerator(
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
@@ -19,7 +21,9 @@ public class Friend {
     private String friendId;
 
 
-    private String userId;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
     public String getId() {
         return id;
@@ -37,11 +41,11 @@ public class Friend {
         this.friendId = friendId;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 }
