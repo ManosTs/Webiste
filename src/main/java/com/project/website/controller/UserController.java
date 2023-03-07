@@ -264,14 +264,11 @@ public class UserController {
 
         User user = userRepository.findUserById(userID);
 
-        if(user == null){
+        User friend = userRepository.findUserById(friendID);
+
+        if(user == null || friend == null){
             return ResponseEntity.badRequest().body("ID NOT FOUND");
         }
-
-        Friend friend = new Friend();
-
-        friend.setUser(user);
-        friend.setFriendId(friendID);
 
         user.addFriend(friend);
 

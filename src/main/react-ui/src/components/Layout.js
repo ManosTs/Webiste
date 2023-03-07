@@ -6,11 +6,14 @@ import "./Layout.scss";
 import Countdown from "react-countdown";
 import React from "react";
 import {ToastContainer} from "react-toastify";
+import NotificationsIcon from '@mui/icons-material/Notifications';
+
 // import SearchIcon from '@mui/icons-material/Search';
-function Layout({memoCountdown,children}){
+function Layout({memoCountdown, children}) {
     const [loggedUser, setLoggedUser] = useState({});
     const history = useNavigate();
     const {loading, error, results, success, actionType} = useSelector(state => state.user);
+    const [showNotDropdown, setShowNotDropdown] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -21,9 +24,9 @@ function Layout({memoCountdown,children}){
     const getLoggedUserDetails = () => {
         const userDetails = JSON.parse(sessionStorage.getItem("login-details"));
         setLoggedUser({
-            username:userDetails.username,
-            id:userDetails.id,
-            email:userDetails.email,
+            username: userDetails.username,
+            id: userDetails.id,
+            email: userDetails.email,
             roleName: userDetails.roles[0].name
 
         });
@@ -38,20 +41,25 @@ function Layout({memoCountdown,children}){
         getLoggedUserDetails();
     }, []);
 
+
+    const handleNotificationDropdown = (e) => {
+        setShowNotDropdown(!showNotDropdown);
+    };
+
     useEffect(() => {
-        if(success && actionType === 'user/logout/fulfilled'){
+        if (success && actionType === 'user/logout/fulfilled') {
             sessionStorage.clear();
             localStorage.clear();
             history('/login');
         }
 
-        if(success && actionType === 'user/refresh-token'){
+        if (success && actionType === 'user/refresh-token') {
 
             // window.location.reload();
         }
     }, [success, error]);
 
-    return(
+    return (
         <Fragment>
             <header>
                 <div className="header--container">
@@ -64,6 +72,20 @@ function Layout({memoCountdown,children}){
                         {/*<NavLink to={'/settings'} className="header--container__link">Settings</NavLink>*/}
                         <NavLink to={'/discover'}
                                  className="header--container__link">Discover</NavLink>
+                    </div>
+                    <div className="header--notification__wrapper">
+                        <button onClick={handleNotificationDropdown} type="button"
+                                className={showNotDropdown ? "header-notification-button active" : "header-notification-button"}>
+                            <NotificationsIcon/>
+                            <span>
+                                9+
+                            </span>
+                        </button>
+                        {showNotDropdown &&
+                            <div className="header--notification__menu">
+
+                            </div>
+                        }
                     </div>
                     {/*<div className="header--container__search">*/}
                     {/*    <SearchIcon/>*/}
@@ -82,7 +104,7 @@ function Layout({memoCountdown,children}){
 
                 </div>
             </footer>
-            <ToastContainer  />
+            <ToastContainer/>
         </Fragment>
     )
 }

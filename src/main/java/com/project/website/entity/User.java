@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.website.annotations.password.Password;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -143,13 +145,17 @@ public class User implements UserDetails {
     )
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(
+            cascade = {CascadeType.ALL},
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
     @JoinTable(
             name = "users_friends",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "friend_id")
     )
-    private Set<Friend> friends = new HashSet<>();
+    private Set<User> friends = new HashSet<>();
 
     @Override
     @JsonIgnore
@@ -188,11 +194,12 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public void addFriend(Friend friend){
+    public void addFriend(User friend){
         this.friends.add(friend);
     }
 
-    public Set<Friend> getFriends() {
+    @JsonIgnoreProperties({"accessToken", "birthDate", "email", "friends", "gender", "roles","username"})
+    public Set<User> getFriends() {
         return friends;
     }
 
